@@ -1,0 +1,2681 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>i love you so much</title>
+    <style>
+      :root {
+        --bg-main: #060913;
+        --player-bg: rgba(255, 255, 255, 0.03);
+
+        /* Colores de Acentos por Era */
+        --color-reputation: #71717a;
+        --color-speaknow: #c084fc;
+        --color-lover: #f472b6;
+        --color-fearless: #fbbf24;
+        --color-red: #ef4444;
+        --color-1989: #38bdf8;
+        --color-folklore: #94a3b8;
+        --color-midnights: #1e3a8a;
+        --color-ttdp: #78350f;
+      }
+
+      html,
+      body {
+        overflow: hidden;
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        background-color: var(--bg-main);
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        color: #f8fafc;
+      }
+
+      /* ✨ INTRO SCREEN */
+      #introScreen {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background:
+          linear-gradient(135deg, rgba(15, 23, 42, 0.6), rgba(30, 27, 75, 0.7)),
+          url("pics/fondo.jpg");
+        background-size: contain; /* 🔥 CAMBIA DE 'cover' a 'contain' */
+        background-position: center;
+        background-repeat: no-repeat;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 100;
+        transition:
+          opacity 0.8s ease,
+          visibility 0.8s;
+        text-align: center;
+        padding: 20px;
+        box-sizing: border-box;
+      }
+
+      #introScreen h1 {
+        font-size: 32px;
+        margin: 0 0 10px 0;
+        background: linear-gradient(to right, #fbbf24, #c084fc, #f472b6);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: pulseGlow 2.5s infinite alternate;
+      }
+
+      #introScreen p {
+        color: #94a3b8;
+        font-size: 14px;
+        margin: 0 0 30px 0;
+        letter-spacing: 1px;
+      }
+
+      .enter-btn {
+        background: transparent;
+        border: 2px solid #f472b6;
+        color: #f472b6;
+        padding: 14px 32px;
+        font-size: 16px;
+        font-weight: bold;
+        border-radius: 30px;
+        cursor: pointer;
+        box-shadow: 0 0 15px rgba(244, 114, 182, 0.2);
+        transition: all 0.3s ease;
+      }
+      .enter-btn:active {
+        transform: scale(0.95);
+        background: rgba(244, 114, 182, 0.1);
+      }
+
+      /* 📱 MAIN APPLICATION CONTAINER */
+      .app-container {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        box-sizing: border-box;
+        opacity: 0;
+        transform: translateY(20px);
+        transition:
+          opacity 0.8s ease,
+          transform 0.8s ease;
+      }
+
+      .app-ready .app-container {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .player-card {
+        width: 100%;
+        max-width: 380px;
+        background: var(--player-bg);
+        border-radius: 30px;
+        padding: 24px;
+        box-sizing: border-box;
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        height: 85vh;
+        justify-content: space-between;
+      }
+
+      .album-artwork {
+        width: 200px;
+        height: 200px;
+        margin: 0 auto 15px auto;
+        border-radius: 20px;
+        background-size: cover;
+        background-position: center;
+        box-shadow: 0 16px 32px rgba(0, 0, 0, 0.5);
+        flex-shrink: 0;
+      }
+
+      .track-name {
+        font-size: 21px;
+        font-weight: 700;
+        margin: 0 0 4px 0;
+      }
+      .album-name {
+        font-size: 13px;
+        color: #94a3b8;
+        margin: 0 0 15px 0;
+      }
+
+      audio {
+        display: none;
+      }
+
+      .lyrics-viewport {
+        background: rgba(0, 0, 0, 0.4);
+        border-radius: 18px;
+        padding: 16px;
+        flex-grow: 1;
+        overflow-y: auto;
+        text-align: left;
+        font-size: 14px;
+        line-height: 1.8;
+        color: #94a3b8;
+        margin-bottom: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.02);
+        -webkit-overflow-scrolling: touch;
+      }
+
+      /* Estilos de las líneas */
+      .lyric-wrapper {
+        margin-bottom: 10px;
+      }
+      .lyric-line {
+        color: #f1f5f9;
+        cursor: pointer;
+        display: block;
+        text-decoration: underline dotted rgba(255, 255, 255, 0.2);
+        text-underline-offset: 3px;
+      }
+      .explanation-box {
+        max-height: 0;
+        overflow-y: auto;
+        transition: max-height 0.4s ease-in-out;
+        background: rgba(255, 255, 255, 0.04);
+        border-radius: 12px;
+        font-size: 13px;
+      }
+      .explanation-inner {
+        padding: 12px;
+        border-left: 3px solid;
+      }
+      .active .explanation-box {
+        max-height: 300px;
+        margin: 6px 0;
+      }
+
+      /* Bordes Dinámicos por Era */
+      .theme-reputation .explanation-inner {
+        border-left-color: var(--color-reputation);
+      }
+      .theme-speaknow .explanation-inner {
+        border-left-color: var(--color-speaknow);
+      }
+      .theme-lover .explanation-inner {
+        border-left-color: var(--color-lover);
+      }
+      .theme-fearless .explanation-inner {
+        border-left-color: var(--color-fearless);
+      }
+      .theme-red .explanation-inner {
+        border-left-color: var(--color-red);
+      }
+      .theme-1989 .explanation-inner {
+        border-left-color: var(--color-1989);
+      }
+      .theme-folklore .explanation-inner {
+        border-left-color: var(--color-folklore);
+      }
+      .theme-midnights .explanation-inner {
+        border-left-color: var(--color-midnights);
+      }
+      .theme-ttdp .explanation-inner {
+        border-left-color: var(--color-ttdp);
+      }
+
+      /* Botón de Play Dinámico */
+      .theme-reputation .main-play-btn {
+        color: var(--color-reputation);
+      }
+      .theme-speaknow .main-play-btn {
+        color: var(--color-speaknow);
+      }
+      .theme-lover .main-play-btn {
+        color: var(--color-lover);
+      }
+      .theme-fearless .main-play-btn {
+        color: var(--color-fearless);
+      }
+      .theme-red .main-play-btn {
+        color: var(--color-red);
+      }
+      .theme-1989 .main-play-btn {
+        color: var(--color-1989);
+      }
+      .theme-folklore .main-play-btn {
+        color: var(--color-folklore);
+      }
+      .theme-midnights .main-play-btn {
+        color: var(--color-midnights);
+      }
+      .theme-ttdp .main-play-btn {
+        color: var(--color-ttdp);
+      }
+      .player-controls {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 30px;
+        padding-top: 5px;
+        flex-shrink: 0;
+      }
+
+      .control-btn {
+        background: none;
+        border: none;
+        color: white;
+        font-size: 22px;
+        cursor: pointer;
+        transition:
+          transform 0.2s,
+          color 0.2s;
+        width: 50px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .control-btn:active {
+        transform: scale(0.85);
+      }
+
+      .main-play-btn {
+        font-size: 28px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .song-slide {
+        display: none;
+        height: 100%;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+      .song-slide.current-active {
+        display: flex;
+      }
+
+      @keyframes pulseGlow {
+        from {
+          text-shadow: 0 0 10px rgba(192, 132, 252, 0.2);
+        }
+        to {
+          text-shadow: 0 0 25px rgba(244, 114, 182, 0.5);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- 🌌 SCREEN 1: THE INTRO GATEWAY -->
+    <div id="introScreen">
+      <h1>Ari & Sofi (taylor's version)</h1>
+      <p>12 months, 12 songs</p>
+      <button class="enter-btn" onclick="startExperience()">Abrir Álbum</button>
+    </div>
+
+    <!-- 📱 SCREEN 2: THE CUSTOM MUSIC APP -->
+    <div class="app-container">
+      <div class="player-card" id="playerCard">
+        <!-- TRACK 1: DELICATE -->
+        <div class="song-slide current-active theme-reputation" id="slide-0">
+          <div
+            class="album-artwork"
+            style="
+              background-image: url(&quot;https://upload.wikimedia.org/wikipedia/en/f/f2/Taylor_Swift_-_Reputation.png&quot;);
+            "
+          ></div>
+          <div>
+            <h2 class="track-name">Delicate</h2>
+            <p class="album-name">Track 1/12 — Reputation</p>
+          </div>
+
+          <audio id="audio-0" src="audio/track1.mp3" preload="auto"></audio>
+
+          <div class="lyrics-viewport">
+            <!-- Todas las líneas de Delicate están aquí -->
+            <div class="lyric-wrapper" onclick="toggleNote(this)">
+              <span class="lyric-line"
+                >This ain't for the best, my reputation's never been worse, so
+                you must like me for me</span
+              >
+              <div class="explanation-box">
+                <div class="explanation-inner">
+                  <strong
+                    >"Esto no es lo mejor, mi reputación nunca ha estado peor,
+                    así que debes quererme por quien soy"</strong
+                  ><br /><br />
+                  No puedo con como cuando nos conocimos estaba pasando de todo
+                  con los grupos de dinámicas y siempre había nuevo drama, pero
+                  aún nos llevamos bien ahí (hola primera linea, hapi).
+                </div>
+              </div>
+            </div>
+
+            We can't make any promises now, can we, babe?<br />
+            But you can make me a drink<br /><br />
+
+            Dive bar on the East Side, where you at?<br />
+            Phone lights up my nightstand in the black<br />
+            Come here, you can meet me in the back<br />
+            Dark jeans and your Nikes, look at you<br />
+            Oh, damn, never seen that color blue<br />
+            Just think of the fun things we could do<br /><br />
+
+            ('Cause I like you)<br />
+            This ain't for the best, my reputation's never been worse<br />
+            So you must like me for me<br />
+            (Yeah, I want you)<br />
+            We can't make any promises now, can we, babe?<br />
+            But you can make me a drink<br /><br />
+
+            <div class="lyric-wrapper" onclick="toggleNote(this)">
+              <span class="lyric-line"
+                >Is it cool that I said all that? Is it chill that you're in my
+                head?</span
+              >
+              <div class="explanation-box">
+                <div class="explanation-inner">
+                  <strong
+                    >"¿Está bien que haya dicho todo eso? ¿Está bien que estés
+                    en mi cabeza?"</strong
+                  ><br /><br />
+                  Realmente no era normal lo mucho que pensaba en ti desde que
+                  nos conocimos, PERO TENÍA QUE SER TU AMIGA, así que quizás no
+                  estaba tan bien 🥺.
+                </div>
+              </div>
+            </div>
+
+            <div class="lyric-wrapper" onclick="toggleNote(this)">
+              <span class="lyric-line">'Cause I know that it's delicate</span>
+              <div class="explanation-box">
+                <div class="explanation-inner">
+                  <strong>"Porque sé que esto es delicado"</strong><br /><br />
+                  Creo que de las cosas que más me preocupaban era arruinar
+                  nuestra amistad a pesar de que había mucha confianza, peor me
+                  alegra como pasó todo en su momento.
+                </div>
+              </div>
+            </div>
+
+            Is it cool that I said all that?<br />
+            Is it too soon to do this yet?<br />
+            'Cause I know that it's delicate<br /><br />
+
+            Isn't it, isn't it, isn't it?<br />
+            Isn't it?<br />
+            Isn't it, isn't it, isn't it?<br />
+            Isn't it delicate?<br /><br />
+
+            Third floor on the West Side, me and you<br />
+
+            <div class="lyric-wrapper" onclick="toggleNote(this)">
+              <span class="lyric-line"
+                >Handsome, you're a mansion with a view</span
+              >
+              <div class="explanation-box">
+                <div class="explanation-inner">
+                  <strong>¨Hermosa, eres una mansión con una vista"</strong
+                  ><br /><br />
+                  AMOOO ESTA LÍNEA, y te juro que es como me sentí cuando te ví
+                  por primera vez y como aún me siento, ni la mansión con la
+                  mejor vista sería más linda que tú 💘.
+                </div>
+              </div>
+            </div>
+
+            <div class="lyric-wrapper" onclick="toggleNote(this)">
+              <span class="lyric-line"
+                >Do the girls back home touch you like I do?</span
+              >
+              <div class="explanation-box">
+                <div class="explanation-inner">
+                  Me da pena traducirlo, saca tus habilidades en inglés aquí
+                  pls, pero LA RESPUESTA ES NO ‼️.
+                </div>
+              </div>
+            </div>
+
+            <div class="lyric-wrapper" onclick="toggleNote(this)">
+              <span class="lyric-line"
+                >Long night with your hands up in my hair</span
+              >
+              <div class="explanation-box">
+                <div class="explanation-inner">
+                  Hello ojalá algún día KASADJA 😭.
+                </div>
+              </div>
+            </div>
+            Echoes of your footsteps on the stairs<br /><br />
+
+            <div class="lyric-wrapper" onclick="toggleNote(this)">
+              <span class="lyric-line"
+                >Stay here, honey, I don't wanna share</span
+              >
+              <div class="explanation-box">
+                <div class="explanation-inner">
+                  <strong>"Quédate aquí, cariño, no quiero compartirte"</strong
+                  ><br /><br />
+                  Factos honey, si pudiera no te comparto con absolutamente
+                  nadie, pero amo mucho el tiempo que paso contigo y nunca
+                  quiero que termine msmsms.
+                </div>
+              </div>
+            </div>
+
+            ('Cause I like you) This ain't for the best...<br />
+            My reputation's never been worse, so you must like me for me...<br />
+            We can't make any promises now Can we, babe? But you can make me a
+            drink Is it cool that I said all that?<br />
+            Is it chill that you're in my head?<br />
+            'Cause I know that it's delicate<br /><br />
+            Is it cool that I said all that?<br />
+            <div class="lyric-wrapper" onclick="toggleNote(this)">
+              <span class="lyric-line">Is it too soon to do this yet?</span>
+              <div class="explanation-box">
+                <div class="explanation-inner">
+                  <strong>¨¿Es muy pronto para hacer esto?"</strong><br /><br />
+                  Ellas duraban solo un día hábil hablando como amigas, STOP.
+                  (ayuda los puntos)
+                </div>
+              </div>
+            </div>
+            'Cause I know that it's delicate<br /><br />
+
+            Isn't it, isn't it, isn't it?<br />
+            Isn't it?<br />
+            Isn't it, isn't it, isn't it?<br />
+            Isn't it delicate?<br /><br />
+
+            <div class="lyric-wrapper" onclick="toggleNote(this)">
+              <span class="lyric-line"
+                >Sometimes I wonder, when you sleep, are you ever dreaming of
+                me?</span
+              >
+              <div class="explanation-box">
+                <div class="explanation-inner">
+                  <strong
+                    >"A veces me pregunto, cuando duermes, ¿estarás soñando
+                    conmigo?"</strong
+                  ><br /><br />
+                  Siempre he querido contarte de un sueño que tuve, no recuerdo
+                  si fue cuando primero nos conocíamos o luego, pero era
+                  básicamente yo con una chica alta en el centro comercial
+                  caminando de la mano JAJAJ, y me hacía sentir muy segura,
+                  recuerdo que íbamos a comprar muebles basta. Siempre he
+                  asumido que eras tú en ese sueño, y me alegra tanto que ahora
+                  nos podamos contar los sueños que tenemos de la otra msmsms ♡.
+                </div>
+              </div>
+            </div>
+
+            <div class="lyric-wrapper" onclick="toggleNote(this)">
+              <span class="lyric-line"
+                >Sometimes when I look into your eyes, I pretend you're mine all
+                the damn time</span
+              >
+              <div class="explanation-box">
+                <div class="explanation-inner">
+                  <strong
+                    >"A veces cuando te miro a los ojos, finjo que eres mía todo
+                    el maldito tiempo"</strong
+                  ><br /><br />
+                  Tanto antes como ahora, solo quisiera que seas mía por siempre
+                  y tus ojitos tan lindos también lo sean.
+                </div>
+              </div>
+            </div>
+
+            ('Cause I like you)<br />
+            Is it cool that I said all that?<br />
+            Is it chill that you're in my head?<br />
+            'Cause I know that it's delicate (delicate)<br />
+            (Yeah, I want you)<br />
+            Is it cool that I said all that?<br />
+            Is it too soon to do this yet?<br />
+            'Cause I know that it's delicate (delicate)<br />
+            ('Cause I like you)<br />
+            Is it cool that I said all that? (Isn't it?)<br />
+            Is it chill that you're in my head? (Isn't it, isn't it?)<br />
+            'Cause I know that it's delicate (isn't it delicate?)<br />
+            (Yeah, I want you)<br />
+            Is it cool that I said all that? (Isn't it?)<br />
+            Is it too soon to do this yet? (Isn't it, isn't it?)<br />
+            'Cause I know that it's delicate<br />
+            Isn't it delicate?
+          </div>
+        </div>
+
+        <!-- TRACK 2: LONDON BOY -->
+        <div class="song-slide theme-lover" id="slide-1">
+          <div
+            class="album-artwork"
+            style="
+              background-image: url(&quot;https://upload.wikimedia.org/wikipedia/en/c/cd/Taylor_Swift_-_Lover.png&quot;);
+            "
+          ></div>
+          <div>
+            <h2 class="track-name">London Boy</h2>
+            <p class="album-name">Track 2/12 — Lover</p>
+          </div>
+
+          <audio id="audio-1" src="audio/track2.mp3" preload="auto"></audio>
+
+          <div class="lyrics-viewport">
+            <div class="lyric-wrapper" onclick="toggleNote(this)">
+              <span class="lyric-line"
+                >(We can go driving in, on my scooter)<br />
+                (Ah, you know, just 'round London)</span
+              >
+              <div class="explanation-box">
+                <div class="explanation-inner">
+                  <strong
+                    >"Podemos ir en camión, you know, por Reynosa 🔥"</strong
+                  ><br /><br />
+                  Esa es la traducción real, Tay me dijo (sikiero).
+                </div>
+              </div>
+            </div>
+
+            I love my hometown<br />
+            As much as Motown, I love SoCal<br />
+            And you know I love Springsteen<br />
+            Faded blue jeans, Tennessee whiskey<br />
+
+            <div class="lyric-wrapper" onclick="toggleNote(this)">
+              <span class="lyric-line"
+                >But something happened, I heard him laughing<br />
+                I saw the dimples first and then I heard the accent</span
+              >
+              <div class="explanation-box">
+                <div class="explanation-inner">
+                  <strong
+                    >"Pero algo pasó, la oí reírse. Primero vi los hoyuelos y
+                    luego escuché el acento"</strong
+                  ><br /><br />
+                  Podría hablarte todo el día de lo mucho que amo tu acento, es
+                  precioso, es perfecto, es el acento más lindo Y TU RISA
+                  AHGFJGGH por favor nunca dejes de reírte porque te escuchas y
+                  te ves preciosa.
+                </div>
+              </div>
+            </div>
+
+            <div class="lyric-wrapper" onclick="toggleNote(this)">
+              <span class="lyric-line"
+                >They say home is where the heart is<br />
+                But that's not where mine lives</span
+              >
+              <div class="explanation-box">
+                <div class="explanation-inner">
+                  <strong
+                    >"Dicen que el hogar es donde está el corazón, pero ahí no
+                    es donde vive el mío"</strong
+                  ><br /><br />
+                  Me encanta esta parte de London Boy, refleja perfectamente
+                  como se siente amar a alguien que no es del mismo lugar que
+                  tú, más adelante más detalles al respecto jjj.
+                </div>
+              </div>
+            </div>
+
+            You know I love a London boy<br />
+            I enjoy walking Camden Market in the afternoon<br />
+            He likes my American smile<br />
+            Like a child when our eyes meet<br />
+
+            <div class="lyric-wrapper" onclick="toggleNote(this)">
+              <span class="lyric-line">Darling, I fancy you</span>
+              <div class="explanation-box">
+                <div class="explanation-inner">
+                  <strong>"Querida, me gustas"</strong><br /><br />
+                  Hola sí, por si no sabías, I FANCY YOU, I DON'T WANT JUST
+                  ANYONE, HEY I LOVE YOU !!
+                </div>
+              </div>
+            </div>
+
+            Took me back to Highgate<br />
+            Met all of his best mates<br />
+
+            <div class="lyric-wrapper" onclick="toggleNote(this)">
+              <span class="lyric-line"
+                >So I guess all the rumors are true<br />
+                You know I love a London boy</span
+              >
+              <div class="explanation-box">
+                <div class="explanation-inner">
+                  <strong
+                    >"Así que supongo que todos los rumores son ciertos, saben
+                    que amo a una chica de México 🗣🇲🇽"</strong
+                  ><br /><br />
+                  Yo manipulando los lyrics, pero es que necesito identificarme,
+                  los rumores son ciertos, estoy perdidamente enamorada de una
+                  chica Mexicana AUUUU.
+                </div>
+              </div>
+            </div>
+
+            Boy, I fancy you, ooh<br /><br />
+
+            And now I love high tea<br />
+            Stories from Uni and the West End<br />
+            You can find me in the pub<br />
+            We are watchin' rugby with his school friends<br />
+            Show me a grey sky, a rainy cab ride<br />
+            Babes, don't threaten me with a good time<br />
+
+            <div class="lyric-wrapper" onclick="toggleNote(this)">
+              <span class="lyric-line"
+                >They say home is where the heart is<br />
+                But God, I love the English</span
+              >
+              <div class="explanation-box">
+                <div class="explanation-inner">
+                  <strong
+                    >"Dicen que el hogar es donde está el corazón, pero Dios, me
+                    encanta la Mexicana"</strong
+                  ><br /><br />
+                  ASÍ SON LAS COSAS, esta es mi línea fev de London Boy, siempre
+                  me recordaba mucho a Henry y Alex, pero luego me di cuenta que
+                  también me podía identificar contigo, así que fue de las que
+                  te dediqué en esos momentos y te la quería explicar smsmsm
+                  (meencantas).
+                </div>
+              </div>
+            </div>
+
+            You know I love a London boy<br />
+            I enjoy nights in Brixton, Shoreditch in the afternoon<br />
+            He likes my American smile<br />
+            Like a child when our eyes meet<br />
+            Darling, I fancy you<br />
+            Took me back to Highgate<br />
+            Met all of his best mates<br />
+            So I guess all the rumors are true<br />
+            You know I love a London boy<br />
+            Boy, I fancy you<br /><br />
+
+            So please show me Hackney<br />
+            Doesn't have to be Louis V up on Bond Street<br />
+
+            <div class="lyric-wrapper" onclick="toggleNote(this)">
+              <span class="lyric-line"
+                >Just wanna be with you<br />
+                Wanna be with you</span
+              >
+              <div class="explanation-box">
+                <div class="explanation-inner">
+                  <strong
+                    >"Solo quiero estar contigo, quiero estar contigo"</strong
+                  ><br /><br />
+                  De hecho sí es todo lo que quisiera THAT'S IT.
+                </div>
+              </div>
+            </div>
+
+            Stick with me, I'm your queen<br />
+            Like a Tennessee Stella McCartney on the Heath<br />
+            Just wanna be with you (wanna be with you)<br />
+            Wanna be with you (oh)<br /><br />
+
+            <div class="lyric-wrapper" onclick="toggleNote(this)">
+              <span class="lyric-line"
+                >'Cause you know I love a London boy<br />
+                I enjoy walking Soho, drinking in the afternoon</span
+              >
+              <div class="explanation-box">
+                <div class="explanation-inner">
+                  <strong
+                    >"Sabes que amo a una chica de México, me gusta pasear por
+                    Reynosa, beber agua de jamaica por la tarde"</strong
+                  ><br /><br />
+                  YA ESTOY ABUSANDO DE LA EDICIÓN DE LYRICS, pero no es mi
+                  culpa, metas goals todo.
+                </div>
+              </div>
+            </div>
+
+            He likes my American smile<br />
+            Like a child when our eyes meet<br />
+            Darling, I fancy you (you)<br />
+            Took me back to Highgate<br />
+            Met all of his best mates<br />
+            So I guess all the rumors are true (yeah)<br />
+            You know I love a London boy (oh)<br />
+            Boy (oh), I fancy you (I fancy you)<br />
+            So please show me Hackney<br />
+            Doesn't have to be Louis V up on Bond Street<br />
+            Just wanna be with you<br />
+            (Boy, boy, I fancy you, oh whoa, oh, oh)<br />
+            Stick with me, I'm your queen<br />
+            Like a Tennessee Stella McCartney on the Heath<br />
+            Just wanna be with you<br />
+            (Wanna be with you)<br />
+            (I fancy you, yeah, I fancy you)<br />
+            Ooh wooh ooh
+          </div>
+        </div>
+
+        <!-- TRACK 3: AOTGYLB -->
+        <div class="song-slide theme-lover" id="slide-2">
+          <div
+            class="album-artwork"
+            style="
+              background-image: url(&quot;https://upload.wikimedia.org/wikipedia/en/c/cd/Taylor_Swift_-_Lover.png&quot;);
+            "
+          ></div>
+          <div>
+            <h2 class="track-name">All Of The Girls You Loved Before</h2>
+            <p class="album-name">Track 3/12 — Lover</p>
+          </div>
+
+          <audio id="audio-2" src="audio/track3.mp3" preload="auto"></audio>
+          <div class="lyrics-viewport">
+            When you think of all the late nights<br />
+            Lame fights over the phone<br />
+            Wake up in the mornin'<br />
+            With someone but feelin' alone<br />
+            A heart is drawn around your name<br />
+            In someone's handwriting, not mine<br />
+            We're sneakin' out into town<br />
+            Holdin' hands, just killin' time<br />
+
+            <div class="lyric-wrapper" onclick="toggleNote(this)">
+              <span class="lyric-line"
+                >Your past and mine are parallel lines<br />
+                Stars all aligned, and they intertwined</span
+              >
+              <div class="explanation-box">
+                <div class="explanation-inner">
+                  <strong
+                    >"Tu pasado y el mío son líneas paralelas, las estrellas se
+                    alinearon y se entrelazaron"</strong
+                  >
+                  <br /><br />
+                  Realmente veníamos de pasados muy distintos y quizá las
+                  probabilidades de conocernos eran bajas, pero de cualquier
+                  forma logramos coincidir en ese grupo y siempre estaré
+                  agradecida por eso.
+                </div>
+              </div>
+            </div>
+
+            And taught you the way you call me baby<br />
+            Treat me like a lady, all that I can say is<br />
+
+            <div class="lyric-wrapper" onclick="toggleNote(this)">
+              <span class="lyric-line"
+                >All of the girls you loved before<br />
+                Made you the one I've fallen for</span
+              >
+              <div class="explanation-box">
+                <div class="explanation-inner">
+                  <strong
+                    >"Todas las chicas que has amado antes te hicieron de quien
+                    me enamoré"</strong
+                  >
+                  <br /><br />
+                  Pues sí así son las cosas 🥺 tengo que agradecerles por que sé
+                  que cada experiencia te ha llevado a ser la persona y novia
+                  tan increíble que tanto amo.
+                </div>
+              </div>
+            </div>
+
+            Every dead-end street led you straight to me<br />
+            Now you're all I need<br />
+            I'm so thankful for<br />
+            All of the girls you loved before<br />
+
+            <div class="lyric-wrapper" onclick="toggleNote(this)">
+              <span class="lyric-line">But I love you more</span>
+              <div class="explanation-box">
+                <div class="explanation-inner">
+                  <strong
+                    >"Todas las chicas que has amado antes te hicieron de quien
+                    me enamoré"</strong
+                  >
+                  <br /><br />
+                  Pues sí así son las cosas 🥺 tengo que agradecerles por que sé
+                  que cada experiencia te ha llevado a ser la persona y novia
+                  tan increíble que tanto amo.
+                </div>
+              </div>
+            </div>
+
+            When I think of all the makeup<br />
+            Fake love, out on the town<br />
+
+            Cryin' in the bathroom for some dude<br />
+            Whose name I cannot remember now<br />
+
+            Secret jokes, all alone<br />
+            No one's home, 16 and wild<br />
+            We're breakin' up, makin' up<br />
+            Leave without sayin' goodbye<br />
+
+            And just know that, it's everything that made me<br />
+
+            <div class="lyric-wrapper" onclick="toggleNote(this)">
+              <span class="lyric-line">
+                Now I call you baby<br />
+                It's why you're so amazing</span
+              >
+              <div class="explanation-box">
+                <div class="explanation-inner">
+                  <strong
+                    >"Ahora te llamo cariño, por eso eres tan increíble"</strong
+                  >
+                  <br /><br />
+                  Realmente sí eres más que increíble y tengo mucha suerte de
+                  poder llamarte por todos los apodos lindos del mundo smsmsm.
+                </div>
+              </div>
+            </div>
+
+            All of the girls you loved before<br />
+            Made you the one I've fallen for<br />
+            Every dead-end street led you straight to me<br />
+            Now you're all I need<br />
+            I'm so thankful for<br />
+            All of the girls you loved before<br />
+            But I love you more<br />
+
+            <div class="lyric-wrapper" onclick="toggleNote(this)">
+              <span class="lyric-line"
+                >Your mother brought you up loyal and kind<br />
+                Teenage love taught you there's good in goodbye<br />
+                Every woman that you knew brought you here<br />
+                I wanna teach you how forever feels like
+              </span>
+              <div class="explanation-box">
+                <div class="explanation-inner">
+                  <strong
+                    >"Tu madre te crió leal y amable<br />
+                    El amor adolescente te enseñó que hay algo bueno en decir
+                    adiós<br />
+                    Cada mujer que conociste te trajo aquí<br />
+                    Quiero enseñarte cómo se siente el por siempre"</strong
+                  >
+                  <br /><br />
+                  Tomaba todas las lineas stop, PERO MIRA QUE PARTE TAN LINDA,
+                  realmente puedes aprender algo de cada persona y ahora
+                  quisiera ser yo por el resto de la vidaa 💗.
+                </div>
+              </div>
+            </div>
+
+            The girls you loved before<br />
+            Made you the one I've fallen for<br />
+            Every dead-end street (dead-end street)<br />
+            Led you straight to me (straight to me)<br />
+            Now you're all I need (all I need)<br />
+            I'm so thankful for<br />
+            All of the girls you loved before<br />
+            But I love you more<br />
+
+            (I love you more)<br />
+            (I love you more)<br />
+          </div>
+        </div>
+
+        <!-- TRACK 4: PAPER RINGS -->
+        <div class="song-slide theme-lover" id="slide-3">
+          <div
+            class="album-artwork"
+            style="
+              background-image: url(&quot;https://upload.wikimedia.org/wikipedia/en/c/cd/Taylor_Swift_-_Lover.png&quot;);
+            "
+          ></div>
+          <div>
+            <h2 class="track-name">Paper Rings</h2>
+            <p class="album-name">Track 4/12 — Lover</p>
+          </div>
+
+          <audio id="audio-3" src="audio/track4.mp3" preload="auto"></audio>
+          <div class="lyrics-viewport">
+            The moon is high<br />
+            Like your friends were the night that we first met<br />
+            Went home and tried to stalk you on the internet<br />
+            Now I've read all of the books beside your bed<br />
+            The wine is cold<br />
+            Like the shoulder that I gave you in the street<br />
+
+            <div class="lyric-wrapper" onclick="toggleNote(this)">
+              <span class="lyric-line">
+                Cat and mouse for a month or two or three</span
+              >
+              <div class="explanation-box">
+                <div class="explanation-inner">
+                  <strong>"Gato y ratón por un mes, o dos, o tres"</strong>
+                  <br /><br />
+                  Eso fue máximo el mes que duramos siendo amigas stop, pero
+                  real.
+                </div>
+              </div>
+            </div>
+
+            Now I wake up in the night and watch you breathe<br />
+
+            <div class="lyric-wrapper" onclick="toggleNote(this)">
+              <span class="lyric-line"
+                >Kiss me once 'cause you know I had a long night <br />
+                Kiss me twice 'cause it's gonna be alright<br />
+                Three times 'cause I've waited my whole life</span
+              >
+              <div class="explanation-box">
+                <div class="explanation-inner">
+                  <strong
+                    >"Bésame una vez porque sabes que tuve una larga noche,
+                    bésame dos veces porque todo estará bien, tres veces porque
+                    esperé toda mi vida"</strong
+                  >
+                  <br /><br />
+                  MSMSMSM realmente cuando me beses tiene que ser un millón de
+                  veces, porque te he esperado y te seguiré esperando por
+                  siempre mi amor.
+                </div>
+              </div>
+            </div>
+
+            I like shiny things, but I'd marry you with paper rings<br />
+            Uh-huh, that's right<br />
+
+            <div class="lyric-wrapper" onclick="toggleNote(this)">
+              <span class="lyric-line"
+                >Darling, you're the one I want, and<br />
+                I hate accidents, except when we went from friends to this</span
+              >
+              <div class="explanation-box">
+                <div class="explanation-inner">
+                  <strong
+                    >"Querida, eres la única que quiero, y odio los accidentes,
+                    excepto cuando pasamos de amigas a esto"</strong
+                  >
+                  <br /><br />
+                  SOLO A TIII TE QUIERO, si pasar de amigas a ser noviecitas dos
+                  veces fueron accidentes, fueron los mejores de la vida.
+                </div>
+              </div>
+            </div>
+
+            Uh-huh, that's right<br />
+            Darling, you're the one I want<br />
+            In paper rings, in picture frames, in dirty dreams<br />
+            Oh, you're the one I want<br />
+            In the winter, in the icy outdoor pool<br />
+            When you jumped in first, I went in too<br />
+
+            <div class="lyric-wrapper" onclick="toggleNote(this)">
+              <span class="lyric-line"
+                >I'm with you, even if it makes me blue</span
+              >
+              <div class="explanation-box">
+                <div class="explanation-inner">
+                  <strong>"Estoy contigo incluso si me hace triste"</strong>
+                  <br /><br />
+                  OKAY esta línea sobre lo anterior de saltar a la piscina y
+                  estar contigo representa como estaré siempre a tu lado incluso
+                  en los momentos difíciles, pero sé que al final todo estará
+                  bien.
+                </div>
+              </div>
+            </div>
+
+            Which takes me back<br />
+            To the color that we painted your brother's wall<br />
+
+            <div class="lyric-wrapper" onclick="toggleNote(this)">
+              <span class="lyric-line"
+                >Honey, without all the exes, fights, and flaws<br />
+                We wouldn't be standing here so tall</span
+              >
+              <div class="explanation-box">
+                <div class="explanation-inner">
+                  <strong
+                    >"Cariño, sin todos los exes, peleas y errores, no
+                    estaríamos aquí con la cabeza en alto"</strong
+                  >
+                  <br /><br />
+                  Creo que cada cosa así, por mala que sea en su momento nos
+                  ayuda a entendernos mejor al final y a mejorar nuestra
+                  relación con el tiempo.
+                </div>
+              </div>
+            </div>
+
+            So kiss you once, 'cause I know you had a long night<br />
+            Kiss you twice 'cause it's gonna be alright<br />
+            Three times 'cause you waited your whole life<br />
+
+            <div class="lyric-wrapper" onclick="toggleNote(this)">
+              <span class="lyric-line">
+                I like shiny things, but I'd marry you with paper rings
+              </span>
+              <div class="explanation-box">
+                <div class="explanation-inner">
+                  <strong
+                    >"Me gustan las cosas brillantes, pero me casaría contigo
+                    con anillos de papel"</strong
+                  >
+                  <br /><br />
+                  De verdad te amo tanto que me casaría contigo de cualquier
+                  forma, incluso con anillos de papel.
+                </div>
+              </div>
+            </div>
+
+            Uh-huh, that's right<br />
+            Darling, you're the one I want, and<br />
+            I hate accidents, except when we went from friends to this<br />
+            Uh-huh, that's right<br />
+            Darling, you're the one I want<br />
+            In paper rings, in picture frames, in dirty dreams<br />
+            Oh, you're the one I want<br />
+            I want to drive away with you<br />
+            I want your complications too<br />
+            I want your dreary Mondays<br />
+
+            <div class="lyric-wrapper" onclick="toggleNote(this)">
+              <span class="lyric-line">
+                Wrap your arms around me, baby boy
+              </span>
+              <div class="explanation-box">
+                <div class="explanation-inner">
+                  <strong>"Pon tus brazos al rededor de mí, chiquitita"</strong>
+                  <br /><br />
+                  Sip digamos que decía chiquitita por que eres mi chiquitita,
+                  SOLO QUIERO QUE ME ABRACEEES, es lo único que necesito
+                </div>
+              </div>
+            </div>
+
+            I want to drive away with you<br />
+            I want your complications too<br />
+            I want your dreary Mondays<br />
+            Wrap your arms around me, baby boy<br />
+            Uh-huh<br />
+            I like shiny things, but I'd marry you with paper rings<br />
+            Ah-ah, that's right, you're the one I want<br />
+            I hate accidents, except when we went from friends to this<br />
+            Ah-ah, darling, you're the one I want<br />
+            I like shiny things, but I'd marry you with paper rings<br />
+            Uh-huh, that's right<br />
+            Darling, you're the one I want, and<br />
+            I hate accidents, except when we went from friends to this<br />
+            Uh-huh, that's right<br />
+            Darling, you're the one I want<br />
+
+            <div class="lyric-wrapper" onclick="toggleNote(this)">
+              <span class="lyric-line"
+                >In paper rings, in picture frames, in all my dreams</span
+              >
+              <div class="explanation-box">
+                <div class="explanation-inner">
+                  <strong
+                    >"En anillos de papel, en marcos de foto, en todos mis
+                    sueños"</strong
+                  >
+                  <br /><br />
+                  Solo a ti te quiero de todas las formas posibles, ya estás en
+                  absolutamente todos mis sueños, y espero que en el futuro
+                  también tengamos miles de fotitos para poner en nuestra casa.
+                </div>
+              </div>
+            </div>
+
+            You're the one I want<br />
+            In paper rings, in picture frames, in all my dreams<br />
+            Oh, you're the one I want<br />
+            You're the one I want, one I want<br />
+            You're the one I want<br />
+          </div>
+        </div>
+
+        <!-- TRACK 4: DAYLIGHT -->
+        <div class="song-slide theme-lover" id="slide-4">
+          <div
+            class="album-artwork"
+            style="
+              background-image: url(&quot;https://upload.wikimedia.org/wikipedia/en/c/cd/Taylor_Swift_-_Lover.png&quot;);
+            "
+          ></div>
+          <div>
+            <h2 class="track-name">Daylight</h2>
+            <p class="album-name">Track 5/12 — Lover</p>
+          </div>
+
+          <audio id="audio-4" src="audio/track5.mp3" preload="auto"></audio>
+          <div class="lyrics-viewport">
+            My love was as cruel as the cities I lived in<br />
+            Everyone looked worse in the light<br />
+            There are so many lines that I've crossed unforgiven<br />
+
+            <div class="lyric-wrapper" onclick="toggleNote(this)">
+              <span class="lyric-line">
+                I'll tell you the truth, but never goodbye</span
+              >
+              <div class="explanation-box">
+                <div class="explanation-inner">
+                  <strong>"Te diré la verdad, pero nunca te diré adiós"</strong>
+                  <br /><br />
+                  Incluso cuando no sea fácil para mí comunicarme prefiero un
+                  millón de veces decirte las cosas que tener que decirte adiós.
+                </div>
+              </div>
+            </div>
+
+            <div class="lyric-wrapper" onclick="toggleNote(this)">
+              <span class="lyric-line"
+                >I don't wanna look at anything else now that I saw you<br />
+                I don't wanna think of anything else now that I thought of
+                you</span
+              >
+              <div class="explanation-box">
+                <div class="explanation-inner">
+                  <strong
+                    >"No quiero mirar nada más ahora que te vi a ti, no quiero
+                    pensar en nada más ahora que pensé en ti"</strong
+                  >
+                  <br /><br />
+                  Esta es NUESTRA canción forever, en verdad eres lo primero y
+                  lo último en lo que pienso todos los días, lo único en lo que
+                  quiero pensar por siempre.
+                </div>
+              </div>
+            </div>
+
+            I've been sleeping so long in a 20-year dark night<br />
+            And now I see daylight, I only see daylight<br />
+            Luck of the draw only draws the unlucky<br />
+            And so I became the butt of the joke<br />
+            I wounded the good, and I trusted the wicked<br />
+            Clearing the air, I breathed in the smoke<br />
+            Maybe you ran with the wolves and refused to settle down<br />
+            Maybe I've stormed out of every single room in this town<br />
+
+            <div class="lyric-wrapper" onclick="toggleNote(this)">
+              <span class="lyric-line"
+                >Threw out our cloaks and our daggers because it's morning
+                now<br />
+                It's brighter now, now</span
+              >
+              <div class="explanation-box">
+                <div class="explanation-inner">
+                  <strong
+                    >"Tiremos nuestras capas y armas, porque ahora es de mañama,
+                    es más brillante ahora"</strong
+                  >
+                  <br /><br />
+                  Nunca había interpretado esta línea mmsmsms es muy linda,
+                  pienso que es dejar atrás el pasado y las cosas negativas y
+                  ver hacia adelante, un futuro lleno de amor y brillanteee.
+                </div>
+              </div>
+            </div>
+
+            I don't wanna look at anything else now that I saw you<br />
+            (I can never look away)<br />
+            I don't wanna think of anything else now that I thought of you<br />
+            (Things will never be the same)<br />
+            I've been sleeping so long in a 20-year dark night<br />
+            (Now I'm wide awake)<br />
+
+            <div class="lyric-wrapper" onclick="toggleNote(this)">
+              <span class="lyric-line"
+                >And now I see daylight (daylight), I only see daylight
+                (daylight)
+              </span>
+              <div class="explanation-box">
+                <div class="explanation-inner">
+                  <strong
+                    >"Y ahora veo la luz del día, solo veo la luz del
+                    día"</strong
+                  >
+                  <br /><br />
+                  Desde que te conocí en 2023 has sido mi razón de poder ver por
+                  fin la luz del día, recuerdo que puse esta nota en mis notas
+                  en los últimos días que hablamos diciendo que siempre sería tu
+                  canción, y así fue y será.
+                </div>
+              </div>
+            </div>
+
+            I only see daylight, daylight, daylight, daylight<br />
+            I only see daylight, daylight, daylight, daylight<br />
+            And I can still see it all (in my mind)<br />
+            All of you, all of me (intertwined)<br />
+
+            <div class="lyric-wrapper" onclick="toggleNote(this)">
+              <span class="lyric-line"
+                >I once believed love would be (black and white)<br />
+                But it's golden (golden)</span
+              >
+              <div class="explanation-box">
+                <div class="explanation-inner">
+                  <strong
+                    >"Una vez creí que el amor sería blanco y negro, pero es
+                    dorado"</strong
+                  >
+                  <br /><br />
+                  Te expliqué también esta línea en 2023, pero antes de
+                  conocerte estaba convencida de que en una relación siempre
+                  iban a haber problemas y nunca iba a ser feliz, pero me
+                  probaste lo contrario, porque siempre me has hecho más que
+                  feliz con tu amor.
+                </div>
+              </div>
+            </div>
+
+            And I can still see it all (in my head)<br />
+            Back and forth from New York (sneaking in your bed)<br />
+            I once believed love would be (burning red)<br />
+            But it's golden<br />
+            Like daylight, like daylight<br />
+            Like daylight, daylight<br />
+            I don't wanna look at anything else now that I saw you<br />
+            (I can never look away)<br />
+            And I don't wanna think of anything else now that I thought of
+            you<br />
+            (Things will never be the same)<br />
+            I've been sleeping so long in a 20-year dark night<br />
+            (Now I'm wide awake)<br />
+            And now I see daylight (I see daylight), I only see daylight<br />
+            I only see daylight, daylight, daylight, daylight<br />
+            I only see daylight, daylight, daylight, daylight<br />
+            I only see daylight, daylight, daylight, daylight<br />
+            I only see daylight, daylight, daylight, daylight<br />
+            Like daylight<br />
+
+            <div class="lyric-wrapper" onclick="toggleNote(this)">
+              <span class="lyric-line">It's golden like daylight</span>
+              <div class="explanation-box">
+                <div class="explanation-inner">
+                  <strong>"Es dorado, como la luz del día"</strong>
+                  <br /><br />
+                  Gracias por mostrarme siempre que el amor es dorado como la
+                  luz del día, gracias por tú misma ser un solecito completo, te
+                  amo muchísimo.
+                </div>
+              </div>
+            </div>
+
+            You gotta step into the daylight and let it go<br />
+            Just let it go, let it go<br />
+          </div>
+        </div>
+
+        <!-- TRACK 6: LOVER -->
+        <div class="song-slide theme-lover" id="slide-5">
+          <div
+            class="album-artwork"
+            style="
+              background-image: url(&quot;https://upload.wikimedia.org/wikipedia/en/c/cd/Taylor_Swift_-_Lover.png&quot;);
+            "
+          ></div>
+          <div>
+            <h2 class="track-name">Lover</h2>
+            <p class="album-name">Track 6/12 — Lover</p>
+          </div>
+
+          <audio id="audio-5" src="audio/track6.mp3" preload="auto"></audio>
+          <div class="lyrics-viewport">
+            <div class="lyric-wrapper" onclick="toggleNote(this)">
+              <span class="lyric-line">
+                We could leave the Christmas lights up 'til January<br />
+                And this is our place, we make the rules</span
+              >
+              <div class="explanation-box">
+                <div class="explanation-inner">
+                  <strong
+                    >"Podríamos dejar las luces de navidad hasta enero, esta es
+                    nuestra casa, hacemos las reglas"</strong
+                  >
+                  <br /><br />
+                  Espero algún dia se haga realidad mi sueño de decorar nuestra
+                  casita en navidad y no quitar las cosas hasta que sea por ahí
+                  junio 🥺.
+                </div>
+              </div>
+            </div>
+
+            And there's a dazzling haze, a mysterious way about you, dear<br />
+
+            <div class="lyric-wrapper" onclick="toggleNote(this)">
+              <span class="lyric-line">
+                Have I known you 20 seconds or 20 years?</span
+              >
+              <div class="explanation-box">
+                <div class="explanation-inner">
+                  <strong>"¿Te he conocido por 20 minutos, o 20 años?"</strong>
+                  <br /><br />
+                  Te juro que el tiempo contigo pasa tan rápido y siento que
+                  aprendo tantas cosas sobre tí, que se siente como si te
+                  conociera desde hace 20 años (antes de que yo naciera estaba
+                  feli pq tú ibas a nacer).
+                </div>
+              </div>
+            </div>
+
+            Can I go where you go?<br />
+            Can we always be this close forever and ever?<br />
+            And ah, take me out, and take me home<br />
+
+            <div class="lyric-wrapper" onclick="toggleNote(this)">
+              <span class="lyric-line">
+                You're my, my, my, my<br />
+                Lover</span
+              >
+              <div class="explanation-box">
+                <div class="explanation-inner">
+                  <strong>"Eres mi, mi, mi, mi amada"</strong>
+                  <br /><br />
+                  YOU'RE MY LOVER !! tengo demasiada suerte de que seas tú a la
+                  persona que amo y siempre amaré.
+                </div>
+              </div>
+            </div>
+
+            We could let our friends crash in the living room<br />
+            This is our place, we make the call<br />
+            And I'm highly suspicious that everyone who sees you wants you<br />
+
+            <div class="lyric-wrapper" onclick="toggleNote(this)">
+              <span class="lyric-line"
+                >I've loved you three summers now, honey, but I want 'em
+                all</span
+              >
+              <div class="explanation-box">
+                <div class="explanation-inner">
+                  <strong
+                    >"Te he amado por tres veranos, cariño, pero los quiero
+                    todos"</strong
+                  >
+                  <br /><br />
+                  Este año que cumplimos 3 años de conocernos se hizo canon que
+                  te he amado por tres veranos, de hecho con este serían 4, y
+                  luego serán todos los veranos que siga con vida por los que te
+                  prometo amarte.
+                </div>
+              </div>
+            </div>
+
+            Can I go where you go?<br />
+            Can we always be this close forever and ever?<br />
+            And ah, take me out, and take me home (forever and ever)<br />
+            You're my, my, my, my<br />
+            Lover<br />
+            Ladies and gentlemen, will you please stand?<br />
+            With every guitar string scar on my hand<br />
+
+            <div class="lyric-wrapper" onclick="toggleNote(this)">
+              <span class="lyric-line"
+                >I take this magnetic force of a man to be my lover
+              </span>
+              <div class="explanation-box">
+                <div class="explanation-inner">
+                  <strong
+                    >"Tomo esta fuerza magnética de una mujer para que sea mi
+                    amada"</strong
+                  >
+                  <br /><br />
+                  LÉVANTENSE, declaro que esta mujer va a ser mi amada por el
+                  resto de la vida 🗣.
+                </div>
+              </div>
+            </div>
+
+            My heart's been borrowed and yours has been blue<br />
+            All's well that ends well to end up with you<br />
+
+            <div class="lyric-wrapper" onclick="toggleNote(this)">
+              <span class="lyric-line"
+                >Swear to be overdramatic and true to my lover</span
+              >
+              <div class="explanation-box">
+                <div class="explanation-inner">
+                  <strong
+                    >"Prometo serle dramática y honesta a mi amado"</strong
+                  >
+                  <br /><br />
+                  Bueno, tal vez sea dramática pero te prometo que siempre seré
+                  honesta contigo.
+                </div>
+              </div>
+            </div>
+
+            And you'll save all your dirtiest jokes for me<br />
+            And at every table, I'll save you a seat, lover<br />
+
+            <div class="lyric-wrapper" onclick="toggleNote(this)">
+              <span class="lyric-line"
+                >Can I go where you go?<br />
+                Can we always be this close forever and ever?</span
+              >
+              <div class="explanation-box">
+                <div class="explanation-inner">
+                  <strong
+                    >"¿Puedo ir a donde vayas? ¿Podemos siempre estar así de
+                    cerca? Por siempre y pasa siempre"</strong
+                  >
+                  <br /><br />
+                  PUEDOOO PLS PLS, espero siempre seamos igual de cercanas y
+                  sigamos amándonos mucho, por los siglos de los siglos AMÉN.
+                </div>
+              </div>
+            </div>
+
+            And ah, take me out, and take me home (forever and ever)<br />
+            You're my, my, my, my<br />
+            Oh, you're my, my, my, my<br />
+            Darling, you're my, my, my, my<br />
+            Lover<br />
+          </div>
+        </div>
+
+        <!-- TRACK 7: ENCHANTED-->
+        <div class="song-slide theme-speaknow" id="slide-6">
+          <div
+            class="album-artwork"
+            style="background-image: url(&quot;pics/speaknow.png&quot;)"
+          ></div>
+          <div>
+            <h2 class="track-name">Enchanted</h2>
+            <p class="album-name">Track 7/12 — Speak Now</p>
+          </div>
+
+          <audio id="audio-6" src="audio/track7.mp3" preload="auto"></audio>
+          <div class="lyrics-viewport">
+            There I was again tonight<br />
+            Forcing laughter, faking smiles<br />
+            Same old tired, lonely place<br />
+            Walls of insincerity<br />
+            Shifting eyes and vacancy<br />
+            <div class="lyric-wrapper" onclick="toggleNote(this)">
+              <span class="lyric-line">Vanished when I saw your face</span>
+              <div class="explanation-box">
+                <div class="explanation-inner">
+                  <strong>"Se desvanecieron cuando vi tu rostro"</strong>
+                  <br /><br />
+                  Cualquier cosa negativa tanto de mi pasado como mi presente se
+                  desvanece cuando te miro y cuando estoy contigo.
+                </div>
+              </div>
+            </div>
+
+            All I can say is it was enchanting to meet you<br />
+            <div class="lyric-wrapper" onclick="toggleNote(this)">
+              <span class="lyric-line"
+                >Your eyes whispered, "Have we met?"</span
+              >
+              <div class="explanation-box">
+                <div class="explanation-inner">
+                  <strong>"Tus ojos susurraban: ¿Nos conocemos?"</strong>
+                  <br /><br />
+                  Creo que este es el sentimiento de cuando te empecé a conocer
+                  un poco más y se sentía como conocerte de toda la vida.
+                </div>
+              </div>
+            </div>
+
+            Across the room, your silhouette<br />
+            Starts to make its way to me<br />
+            The playful conversation starts<br />
+
+            <div class="lyric-wrapper" onclick="toggleNote(this)">
+              <span class="lyric-line"
+                >Counter all your quick remarks<br />
+                Like passing notes in secrecy</span
+              >
+              <div class="explanation-box">
+                <div class="explanation-inner">
+                  <strong
+                    >"Empiezo a notar tus comentarios rápidos, como si nos
+                    estuviéramos pasando notas en secreto"</strong
+                  >
+                  <br /><br />
+                  Yo hablando mil veces de la primera vez que hablamos y que
+                  quizás ya no recuerdas pero para mí fue y sigue siendo uno de
+                  mis recuerdos favoritos, quizás no por el momento solamente,
+                  donde sí era como si nos pasaramos notas en secreto frente a
+                  todo el grupo, pero también por todo lo que vino después.
+                </div>
+              </div>
+            </div>
+
+            And it was enchanting to meet you<br />
+            All I can say is I was enchanted to meet you<br />
+            This night is sparkling, don't you let it go<br />
+            <div class="lyric-wrapper" onclick="toggleNote(this)">
+              <span class="lyric-line"
+                >I'm wonderstruck, blushing all the way home</span
+              >
+              <div class="explanation-box">
+                <div class="explanation-inner">
+                  <strong
+                    >"Estoy fascinada, sonrojándome en todo el camino a
+                    casa"</strong
+                  >
+                  <br /><br />
+                  Tienes el talento de hacerme sonrojar y sonreír como bobita
+                  con todo lo que haces, y así ha sido desde 2023, antes en el
+                  camino del colegio a la casa, y ahora en el camino de la
+                  universidad a la casa, es el mismo sentimiento, y ojalá en un
+                  futuro sea del trabajo a la casa, con la diferencia de que sé
+                  que estarás ahí.
+                </div>
+              </div>
+            </div>
+
+            I'll spend forever wondering if you knew<br />
+            I was enchanted to meet you<br />
+            The lingering question kept me up<br />
+            2 a.m., who do you love?<br />
+            I wonder 'til I'm wide awake<br />
+
+            <div class="lyric-wrapper" onclick="toggleNote(this)">
+              <span class="lyric-line"
+                >And now I'm pacing back and forth<br />
+                Wishing you were at my door</span
+              >
+              <div class="explanation-box">
+                <div class="explanation-inner">
+                  <strong
+                    >"Y ahora voy de aquí para allá, deseando que estuvieras
+                    frente a mi puerta"</strong
+                  >
+                  <br /><br />
+                  Esto aplica tanto para el momento en que te perdí, tanto para
+                  ahora, lo único que quisiera es tenerte aquí para decirte lo
+                  encantada que estuve y estoy de conocerte.
+                </div>
+              </div>
+            </div>
+
+            I'd open up and you would say<br />
+            "Hey, it was enchanting to meet you"<br />
+            All I know is I was enchanted to meet you<br />
+            This night is sparkling, don't you let it go<br />
+            I'm wonderstruck, blushing all the way home<br />
+            I'll spend forever wondering if you knew<br />
+            This night is flawless, don't you let it go<br />
+            I'm wonderstruck, dancing around all alone<br />
+            I'll spend forever wondering if you knew<br />
+            I was enchanted to meet you<br />
+
+            <div class="lyric-wrapper" onclick="toggleNote(this)">
+              <span class="lyric-line"
+                >This is me praying that<br />
+                This was the very first page</span
+              >
+              <div class="explanation-box">
+                <div class="explanation-inner">
+                  <strong
+                    >"Esta soy yo pidiendo que esta fuera la primera
+                    página"</strong
+                  >
+                  <br /><br />
+                  Siempre me voy a sentir más que afortunada de que esa sí haya
+                  sido solo la primera página de muchas que faltan y no donde la
+                  historia terminó porque tuvimos una segunda oportunidad, es
+                  algo que no me habria imaginado antes que pasaría.
+                </div>
+              </div>
+            </div>
+
+            Not where the story line ends<br />
+            My thoughts will echo your name<br />
+
+            Until I see you again<br />
+            These are the words I held back<br />
+            As I was leaving too soon<br />
+            I was enchanted to meet you<br />
+            Please don't be in love with someone else<br />
+            Please don't have somebody waiting on you<br />
+
+            <div class="lyric-wrapper" onclick="toggleNote(this)">
+              <span class="lyric-line"
+                >Please don't be in love with someone else<br />
+                Please don't have somebody waiting on you</span
+              >
+              <div class="explanation-box">
+                <div class="explanation-inner">
+                  <strong
+                    >"Por favor, no te enamores de nadie más. Por favor, no
+                    tengas a nadie esperando por ti"</strong
+                  >
+                  <br /><br />
+                  LA PARTE MÁS LINDA Y PERSONAL DE ENCHANTED FOREVER.
+                </div>
+              </div>
+            </div>
+
+            This night is sparkling, don't you let it go<br />
+            I'm wonderstruck, blushing all the way home<br />
+            I'll spend forever wondering if you knew<br />
+            This night is flawless, don't you let it go<br />
+            I'm wonderstruck, dancing around all alone<br />
+
+            <div class="lyric-wrapper" onclick="toggleNote(this)">
+              <span class="lyric-line"
+                >I'll spend forever wonderin' if you knew<br />
+                I was enchanted to meet you</span
+              >
+              <div class="explanation-box">
+                <div class="explanation-inner">
+                  <strong
+                    >"Siempre me preguntaré si sabías que estaba encantada de
+                    conocerte"</strong
+                  >
+                  <br /><br />
+                  POR ÚLTIMO, la línea que aún no seleccioné, estaré encantada
+                  de conocerte por siempre, y aunque puse esta en representación
+                  al momento en que nos separamos en su momento, estuve y aún
+                  estoy encantada de haber tenido la oportunidad de conocer a
+                  alguien como tú.
+                </div>
+              </div>
+            </div>
+
+            Please don't be in love with someone else<br />
+            Please don't have somebody waiting on you<br />
+          </div>
+        </div>
+
+        <!-- TRACK 8: JTF (Fearless) -->
+        <div class="song-slide theme-fearless" id="slide-7">
+          <div
+            class="album-artwork"
+            style="background-image: url(&quot;pics/fearless.png&quot;)"
+          ></div>
+          <div>
+            <h2 class="track-name">Jump Then Fall</h2>
+            <p class="album-name">Track 8/12 — Fearless</p>
+          </div>
+
+          <audio id="audio-7" src="audio/track8.mp3" preload="auto"></audio>
+          <div class="lyrics-viewport">
+            <div class="lyric-wrapper" onclick="toggleNote(this)">
+              <span class="lyric-line"
+                >I like the way you sound in the mornin'<br />
+                We're on the phone and without a warnin'<br />
+                I realize your laugh is the best sound I have ever heard</span
+              >
+              <div class="explanation-box">
+                <div class="explanation-inner">
+                  <strong
+                    >"Me gusta la forma en que suenas en la mañana, estamos en
+                    el teléfono y sin previo aviso me doy cuenta de que tu risa
+                    es el mejor sonido que he escuchaado"</strong
+                  >
+                  <br /><br />
+                  Esta es mi línea más personal de JTF porque DIOSMIO tu voz
+                  cuando me mandas audios por la mañana cuando apenas te
+                  despertaste msmssm me enamoro, además tu risa es tan preciosa
+                  que genuinamente es el mejor sonido que he escuchado.
+                </div>
+              </div>
+            </div>
+
+            I like the way I can't keep my focus<br />
+            I watch you talk, you didn't notice<br />
+            <div class="lyric-wrapper" onclick="toggleNote(this)">
+              <span class="lyric-line"
+                >I hear the words but all I can think is we should be
+                together</span
+              >
+              <div class="explanation-box">
+                <div class="explanation-inner">
+                  <strong
+                    >"Escucho las palabras pero todo lo que puedo pensar es que
+                    deberíamos estar juntas"</strong
+                  >
+                  <br /><br />
+                  YO TODOS LOS DÍAS EN CUALQUIER LIGAR A CUALQUIER HORA, no
+                  puedo concentrarme cuando solo pienso en ti y en como amaría
+                  estar a tu lado.
+                </div>
+              </div>
+            </div>
+
+            Every time you smile, I smile<br />
+            And every time you shine, I'll shine for you<br />
+            Whoa-oh, I'm feelin' you, baby<br />
+            Don't be afraid to jump then fall<br />
+            Jump then fall into me<br />
+            Baby, I'm never gonna leave you<br />
+            Say that you wanna be with me too<br />
+
+            <div class="lyric-wrapper" onclick="toggleNote(this)">
+              <span class="lyric-line">So I'ma stay through it all</span>
+              <div class="explanation-box">
+                <div class="explanation-inner">
+                  <strong>"Porque me quedaré a pesar de todo"</strong>
+                  <br /><br />
+                  Espero sepas que me quedaré a tu lado incluso en los momentos
+                  más difíciles y no me iré.
+                </div>
+              </div>
+            </div>
+
+            So jump then fall<br />
+            Well, I like the way your hair falls in your face<br />
+
+            <div class="lyric-wrapper" onclick="toggleNote(this)">
+              <span class="lyric-line"
+                >You got the keys to me, I love each freckle on your face</span
+              >
+              <div class="explanation-box">
+                <div class="explanation-inner">
+                  <strong
+                    >"Tienes las llaves para entrar en mi, amo cada lunar en tu
+                    rostro"</strong
+                  >
+                  <br /><br />
+                  UFHGHGHGH los rumores son ciertos, cambié peca por lunar
+                  PORQUE ADORO TUS LUNARES TAN LINDOS Y TODO DE TI, con solo
+                  existir ya mi corazón es todo tuyo.
+                </div>
+              </div>
+            </div>
+
+            Oh, I've never been so wrapped up, honey<br />
+            I like the way you're everything I ever wanted<br />
+            I had time to think it oh, over<br />
+            And all I can say is come closer<br />
+            Take a deep breath and jump then fall into me<br />
+
+            <div class="lyric-wrapper" onclick="toggleNote(this)">
+              <span class="lyric-line"
+                >'Cause every time you smile, I smile<br />
+                And every time you shine, I'll shine for you</span
+              >
+              <div class="explanation-box">
+                <div class="explanation-inner">
+                  <strong
+                    >"Porque cada vez que sonríes, sonrío. Y cada vez que
+                    brilles, brillaré por tí"</strong
+                  >
+                  <br /><br />
+                  Brillaaas, y brillas tan lindo, y brillanos juntas 🥺.
+                </div>
+              </div>
+            </div>
+
+            Whoa-oh, I'm feeling you, baby<br />
+            Don't be afraid to jump then fall<br />
+            Jump then fall into me<br />
+            Baby, I'm never gonna leave you<br />
+            Say that you wanna be with me too<br />
+            So I'ma stay through it all<br />
+            So jump then fall<br />
+            The bottom's gonna drop out from under our feet<br />
+            I'll catch you, I'll catch you<br />
+
+            <div class="lyric-wrapper" onclick="toggleNote(this)">
+              <span class="lyric-line"
+                >When people say things that bring you to your knees<br />
+                I'll catch you</span
+              >
+              <div class="explanation-box">
+                <div class="explanation-inner">
+                  <strong
+                    >"Cuando la gente dice cosas que te ponen de rodillas, te
+                    atraparé"</strong
+                  >
+                  <br /><br />
+                  Siempre que algo te haga sentir mal prometo estar a tu lado
+                  para consolarte y hacerte saber lo importante e increíble que
+                  eres.
+                </div>
+              </div>
+            </div>
+
+            The time is gonna come when you're so mad, you could cry<br />
+            But I'll hold you through the night until you smile<br />
+            Whoa-oh, I need you, baby<br />
+
+            <div class="lyric-wrapper" onclick="toggleNote(this)">
+              <span class="lyric-line"
+                >Don't be afraid, please, jump then fall<br />
+                Jump then fall into me</span
+              >
+              <div class="explanation-box">
+                <div class="explanation-inner">
+                  <strong
+                    >"No tengas miedo, por favor, salta y luego enamórate, salta
+                    y luego enamórate de mí"</strong
+                  >
+                  <br /><br />
+                  Por favooor, salta y enamórate de mi smsmsms y prometo cuidar
+                  tu corazón.
+                </div>
+              </div>
+            </div>
+
+            Baby, I'm never gonna leave you<br />
+            Say that you wanna be with me too<br />
+            So I'ma stay through it all<br />
+            So jump then fall<br />
+            Jump then fall, baby<br />
+            Jump then fall into me, into me<br />
+            Every time you smile, I smile<br />
+            And every time you shine, I'll shine<br />
+            And every time you're here<br />
+            Baby, I'll show you, I'll show you<br />
+            You can jump then fall<br />
+            Jump then fall<br />
+            Jump then fall into me<br />
+            Into me, yeah<br />
+          </div>
+        </div>
+
+        <!-- TRACK 9: Invisible String -->
+        <div class="song-slide theme-forlklore" id="slide-8">
+          <div
+            class="album-artwork"
+            style="background-image: url(&quot;pics/folklore.png&quot;)"
+          ></div>
+          <div>
+            <h2 class="track-name">Invisible String</h2>
+            <p class="album-name">Track 9/12 — Folklore</p>
+          </div>
+
+          <audio id="audio-8" src="audio/track9.mp3" preload="auto"></audio>
+          <div class="lyrics-viewport">
+            Green was the color of the grass<br />
+            Where I used to read at Centennial Park<br />
+            I used to think I would meet somebody there<br />
+            Teal was the color of your shirt when you were 16 at the yogurt
+            shop<br />
+            You used to work at to make a little money<br />
+            <div class="lyric-wrapper" onclick="toggleNote(this)">
+              <span class="lyric-line">Time, curious time</span>
+              <div class="explanation-box">
+                <div class="explanation-inner">
+                  <strong>"Tiempo, curioso tiempo"</strong>
+                  <br /><br />
+                  Poético vdd¿? MENTIRA pero realmente pienso que el tiempo es
+                  muy curioso, o místico, o maravilloso como dice Taylor a lo
+                  largo de la canción, siento que gracias a él hemos llegado a
+                  estar aquí.
+                </div>
+              </div>
+            </div>
+
+            Gave me no compasses, gave me no signs<br />
+            Were there clues I didn't see?<br />
+            <div class="lyric-wrapper" onclick="toggleNote(this)">
+              <span class="lyric-line"
+                >And isn't it just so pretty to think<br />
+                All along there was some<br />
+                Invisible string<br />
+                Tying you to me?</span
+              >
+              <div class="explanation-box">
+                <div class="explanation-inner">
+                  <strong
+                    >"¿Y no es muy lindo pensar que todo este tiempo había un
+                    hilo invisible atándote a mí?"</strong
+                  >
+                  <br /><br />
+                  Momento de proyectarme, estoy 1000% segura de que estamos más
+                  que destinadas a estar juntas y a pesar de todo lo que pasó
+                  siempre ha habido algo uniéndonos, ojalá incluso antes de
+                  conocernos, y así sea un hilo que recorra más de 3000km, sé
+                  que está ahí.
+                </div>
+              </div>
+            </div>
+
+            And isn't it just so pretty to think<br />
+            All along there was some<br />
+            Invisible string<br />
+            Tying you to me? Bad was the blood of the song in the cab on your
+            first trip to L.A.<br />
+            You ate at my favorite spot for dinner<br />
+            Bold was the waitress on our three-year trip<br />
+            Getting lunch down by the Lakes<br />
+            She said I looked like an American singer<br />
+            Time, mystical time<br />
+            Cutting me open, then healing me fine<br />
+            Were there clues I didn't see?<br />
+            And isn't it just so pretty to think<br />
+            All along there was some<br />
+            Invisible string<br />
+            Tying you to me?<br />
+            A string that pulled me<br />
+            Out of all the wrong arms right into that dive bar<br />
+
+            <div class="lyric-wrapper" onclick="toggleNote(this)">
+              <span class="lyric-line"
+                >Something wrapped all of my past mistakes in barbed wire</span
+              >
+              <div class="explanation-box">
+                <div class="explanation-inner">
+                  <strong
+                    >"Algo envolvió todos mis errores del pasado en alambre de
+                    púas"</strong
+                  >
+                  <br /><br />
+                  Sé que estoy muy lejos de ser perfecta para tí pero también sé
+                  que me has ayudado a cambiar y a mejorar de muchas formas y
+                  espero siga siendo así.
+                </div>
+              </div>
+            </div>
+            Something wrapped all of my past mistakes in barbed wire<br />
+            Chains around my demons<br />
+            Wool to brave the seasons<br />
+
+            <div class="lyric-wrapper" onclick="toggleNote(this)">
+              <span class="lyric-line"
+                >One single thread of gold tied me to you
+              </span>
+              <div class="explanation-box">
+                <div class="explanation-inner">
+                  <strong>"Un único hilo de oro me ató a tí"</strong>
+                  <br /><br />
+                  ES MUY LINDO, ES MUY ROMÁNTICO NO PUEDO, estoy segurísima de
+                  que fue así.
+                </div>
+              </div>
+            </div>
+
+            Cold was the steel of my axe to grind<br />
+            For the boys who broke my heart<br />
+            Now I send their babies presents<br />
+            Gold was the color of the leaves<br />
+            When I showed you around Centennial Park<br />
+
+            <div class="lyric-wrapper" onclick="toggleNote(this)">
+              <span class="lyric-line"
+                >Hell was the journey, but it brought me heaven
+              </span>
+              <div class="explanation-box">
+                <div class="explanation-inner">
+                  <strong
+                    >"El viaje fue infernal pero me llevó hasta el
+                    paraíso"</strong
+                  >
+                  <br /><br />
+                  Para reflexionar, creo que han habido muchos momentos
+                  difíciles tanto antes como después de conocernos en 2023, pero
+                  me gusta pensar que todo vale la pena porque al final estaré
+                  contigo y para mí ese es el paraíso y la mejor recompensa que
+                  podría pedir.
+                </div>
+              </div>
+            </div>
+
+            Time, wondrous time<br />
+            Gave me the blues and then purple-pink skies<br />
+            And it's cool, baby, with me<br />
+            And isn't it just so pretty to think<br />
+            All along there was some<br />
+            Invisible string<br />
+            Tying you to me?<br />
+          </div>
+        </div>
+
+        <!-- TRACK 9: CIWYW -->
+        <div class="song-slide theme-reputation" id="slide-9">
+          <div
+            class="album-artwork"
+            style="
+              background-image: url(&quot;https://upload.wikimedia.org/wikipedia/en/f/f2/Taylor_Swift_-_Reputation.png&quot;);
+            "
+          ></div>
+          <div>
+            <h2 class="track-name">Call It What You Want</h2>
+            <p class="album-name">Track 10/12 — Reputation</p>
+          </div>
+
+          <audio id="audio-9" src="audio/track10.mp3" preload="auto"></audio>
+          <div class="lyrics-viewport">
+            My castle crumbled overnight<br />
+            I brought a knife to a gun fight<br />
+            They took the crown, but it's alright<br />
+            All the liars are calling me one<br />
+            Nobody's heard from me for months<br />
+            I'm doing better than I ever was<br />
+            'Cause<br />
+            <div class="lyric-wrapper" onclick="toggleNote(this)">
+              <span class="lyric-line"
+                >My baby's fit like a daydream<br />
+                Walking with his head down<br />
+                I'm the one he's walking to</span
+              >
+              <div class="explanation-box">
+                <div class="explanation-inner">
+                  <strong
+                    >"Mi chica encaja como un sueño, caminando con la cabeza
+                    baja, soy hacia quien camina"</strong
+                  >
+                  <br /><br />
+                  ASÍ QUE LLÁMALO COMO QUIERASSS, msmmsms realmente pareces
+                  sacada de un sueño y eres todo lo que podría necesitar,
+                  gracias por ser yo hacia quien caminas.
+                </div>
+              </div>
+            </div>
+
+            So, call it what you want, yeah<br />
+            Call it what you want to<br />
+            My baby's fly like a jet stream<br />
+            High above the whole scene<br />
+
+            <div class="lyric-wrapper" onclick="toggleNote(this)">
+              <span class="lyric-line">Loves me like I'm brand new</span>
+              <div class="explanation-box">
+                <div class="explanation-inner">
+                  <strong>"Me ama como si fuera nueva"</strong>
+                  <br /><br />
+                  Y GRACIAS, gracias por amarme con la misma intensidad después
+                  de todo este tiempo, yo te amo todos los días como si fuera el
+                  primer día y cada vez más.
+                </div>
+              </div>
+            </div>
+
+            So, call it what you want, yeah<br />
+            Call it what you want to<br />
+            All my flowers grew back as thorns<br />
+            Windows boarded up after the storm<br />
+            He built a fire just to keep me warm<br />
+            All the drama queens taking swings<br />
+            All the jokers dressing up as kings<br />
+
+            <div class="lyric-wrapper" onclick="toggleNote(this)">
+              <span class="lyric-line"
+                >They fade to nothing when I look at him</span
+              >
+              <div class="explanation-box">
+                <div class="explanation-inner">
+                  <strong>"Desaparecen cuando la miro a ella"</strong>
+                  <br /><br />
+                  Cualquier problema desaparece cuando estoy contigo, me siento
+                  segura y feliz a tu lado.
+                </div>
+              </div>
+            </div>
+
+            And I know I make the same mistakes every time<br />
+            Bridges burn, I never learn<br />
+            <div class="lyric-wrapper" onclick="toggleNote(this)">
+              <span class="lyric-line"
+                >At least I did one thing right<br />
+                I did one thing right</span
+              >
+              <div class="explanation-box">
+                <div class="explanation-inner">
+                  <strong
+                    >"Al menos hice una cosa bien, hice una cosa bien"</strong
+                  >
+                  <br /><br />
+                  Todos sabemos que no sé tomar decisiones, pero si algo hice
+                  bien en esta vida es elegirte a tí, y lo seguiré haciendo por
+                  el resto de mi vida.
+                </div>
+              </div>
+            </div>
+
+            I'm laughing with my lover<br />
+            Making forts under covers<br />
+            Trust him like a brother<br />
+            Yeah, you know I did one thing right<br />
+
+            <div class="lyric-wrapper" onclick="toggleNote(this)">
+              <span class="lyric-line"
+                >Starry eyes sparking up my darkest night</span
+              >
+              <div class="explanation-box">
+                <div class="explanation-inner">
+                  <strong
+                    >"Ojos estrellados iluminando mi noche más oscura"</strong
+                  >
+                  <br /><br />
+                  Tus ojitos tan preciosos y brillantes podrían iluminarlo todo,
+                  incluso la noche más oscura con solo mirarme msmsms.
+                </div>
+              </div>
+            </div>
+
+            My baby's fit like a daydream<br />
+            Walking with his head down<br />
+            I'm the one he's walking to<br />
+            So, call it what you want, yeah<br />
+            Call it what you want to<br />
+            My baby's fly like a jet stream<br />
+            High above the whole scene<br />
+            Loves me like I'm brand new (call it what you want, call it what you
+            want, call it)<br />
+            So, call it what you want, yeah<br />
+            Call it what you want to<br />
+
+            <div class="lyric-wrapper" onclick="toggleNote(this)">
+              <span class="lyric-line"
+                >I want to wear his initial on a chain 'round my neck<br />
+                Chain 'round my neck<br />
+                Not because he owns me<br />
+                But 'cause he really knows me</span
+              >
+              <div class="explanation-box">
+                <div class="explanation-inner">
+                  <strong
+                    >"Quiero llevar su inicial en una cadena alrededor del
+                    cuello, no porque sea suya, sino porque de verdad me
+                    conoce"</strong
+                  >
+                  <br /><br />
+                  Bueno, ambas cosas, sí soy tuya pero realmente quisiera tener
+                  un collar con tu inicial como tú msmssm, adoro la letra A
+                  ahora, y en verdad me conoces mejor que nadie.
+                </div>
+              </div>
+            </div>
+
+            (Which is more than they can say)<br />
+            I recall late November<br />
+            Holding my breath, slowly I said<br />
+            You don't need to save me<br />
+
+            <div class="lyric-wrapper" onclick="toggleNote(this)">
+              <span class="lyric-line">But would you run away with me? </span>
+              <div class="explanation-box">
+                <div class="explanation-inner">
+                  <strong>"¿Pero escaparías conmigo?"</strong>
+                  <br /><br />
+                  DIIIME TELL ME SI ESCAPARÍAS CONMIGO, porque yo sí, a donde
+                  fuera pero contigo.
+                </div>
+              </div>
+            </div>
+
+            Yes (would you run away?)<br />
+            My baby's fit like a daydream<br />
+            Walking with his head down<br />
+            I'm the one he's walking to (call it what you want, call it what you
+            want, call it)<br />
+            So, call it what you want, yeah<br />
+            Call it what you want to<br />
+            My baby's fly like a jet stream<br />
+            High above the whole scene<br />
+            Loves me like I'm brand new (call it what you want, call it what you
+            want, call it)<br />
+            So, call it what you want, yeah<br />
+            Call it what you want to<br />
+            (Call it what you want)<br />
+            (Call it what you want, call it)<br />
+            (Call it what you want)<br />
+            (Call it what you want, call it)<br />
+            (Call it what you want)<br />
+            (Call it what you want, call it)<br />
+            (Call it what you want)<br />
+            (Call it what you want)<br />
+            (Call it what you want)<br />
+            (Call it what you want)<br />
+            Call it what you want, yeah<br />
+            Call it what you want to<br />
+          </div>
+        </div>
+
+        <!-- TRACK 11: OURS -->
+        <div class="song-slide theme-speaknow" id="slide-10">
+          <div
+            class="album-artwork"
+            style="background-image: url(&quot;pics/speaknow.png&quot;)"
+          ></div>
+          <div>
+            <h2 class="track-name">Ours</h2>
+            <p class="album-name">Track 11/12 — Speak Now</p>
+          </div>
+
+          <audio id="audio-10" src="audio/track11.mp3" preload="auto"></audio>
+          <div class="lyrics-viewport">
+            Elevator buttons and morning air<br />
+            Strangers' silence makes me wanna take the stairs<br />
+            If you were here we'd laugh about their vacant stares<br />
+            <div class="lyric-wrapper" onclick="toggleNote(this)">
+              <span class="lyric-line">But right now my time is theirs</span>
+              <div class="explanation-box">
+                <div class="explanation-inner">
+                  <strong>"Pero ahora, mi tiempo les pertenece a ellos"</strong>
+                  <br /><br />
+                  Así de emo me siento en cualquier situación donde sé que sería
+                  muy divertido que estuvieras ahí conmigo, o cuando estoy
+                  ocupada y todo lo que quiero es hablar contigo, por ahora se
+                  siente así pero sé que llegará el momento en que mi tiempo
+                  será todo tuyo.
+                </div>
+              </div>
+            </div>
+
+            Seems like there's always someone who disapproves<br />
+            They'll judge it like they know about me and you<br />
+            And the verdict comes from those with nothing else to do<br />
+            <div class="lyric-wrapper" onclick="toggleNote(this)">
+              <span class="lyric-line"
+                >The jury's out, but my choice is you</span
+              >
+              <div class="explanation-box">
+                <div class="explanation-inner">
+                  <strong
+                    >"El jurado está afuera, pero mi elección eres tú"</strong
+                  >
+                  <br /><br />
+                  ASÍ SON LAS COSAS, tú eres y siempre vas a ser mi elección sin
+                  importar qué.
+                </div>
+              </div>
+            </div>
+
+            So don't you worry your pretty, little mind<br />
+            People throw rocks at things that shine<br />
+            And life makes love look hard<br />
+
+            <div class="lyric-wrapper" onclick="toggleNote(this)">
+              <span class="lyric-line"
+                >The stakes are high, the water's rough<br />
+                But this love is ours</span
+              >
+              <div class="explanation-box">
+                <div class="explanation-inner">
+                  <strong
+                    >"Las apuestas son altas, el agua es agitada, pero este amor
+                    es nuestro"</strong
+                  >
+                  <br /><br />
+                  No importa qué tan arriesgada sea la apuesta o lo que vaya a
+                  pasar más adelante, estoy dispuesta a aceptarlo todo por tí.
+                </div>
+              </div>
+            </div>
+
+            You never know what people have up their sleeves<br />
+            Ghosts from your past gonna jump out at me<br />
+            Lurking in the shadows with their lip gloss smiles<br />
+            But I don't care 'cause right now you're mine<br />
+            And you'll say<br />
+
+            <div class="lyric-wrapper" onclick="toggleNote(this)">
+              <span class="lyric-line"
+                >Don't you worry your pretty, little mind<br />
+                People throw rocks at things that shine<br />
+                And life makes love look hard</span
+              >
+              <div class="explanation-box">
+                <div class="explanation-inner">
+                  <strong
+                    >"No le des vueltas a tu cabecita hermosa, la gente lanza
+                    piedras a lo que brilla, y la vida hace que el amor parezca
+                    difícil"</strong
+                  >
+                  <br /><br />
+                  Es cierto es cierto, pero espero recuerdes que cualquier
+                  comentario es envidia AH AKADJA, el amor no parece fácil y no
+                  lo es, pero sé que vamos a lograrlo sin importar lo que
+                  piensen otras personas.
+                </div>
+              </div>
+            </div>
+
+            The stakes are high, the water's rough<br />
+            But this love is ours<br />
+            And it's not theirs to speculate<br />
+            If it's wrong, and your hands are tough<br />
+            But they are where mine belong, and<br />
+            I'll fight their doubt and give you faith<br />
+            With this song for you<br />
+
+            <div class="lyric-wrapper" onclick="toggleNote(this)">
+              <span class="lyric-line"
+                >'Cause I love the gap between your teeth<br />
+                And I love the riddles that you speak<br />
+                And any snide remarks from my father<br />
+                About your tattoos will be ignored<br />
+                'Cause my heart is yours</span
+              >
+              <div class="explanation-box">
+                <div class="explanation-inner">
+                  <strong
+                    >"Porque amo el espacio entre tus dientes, y amo las
+                    preguntas que haces. Y cualquier comentario sarcástico de mi
+                    familia sobre tus tatuajes será ignorado, porque mi corazón
+                    es tuyo."</strong
+                  >
+                  <br /><br />
+                  Riddles es acertijos PERO AMO LAS PREGUNTAS QUE HACES, y amo
+                  que te guste preguntar cosas, amo todo de ti y mi corazón ya
+                  es completamente tuyo, cualquier cosa que digan los demás no
+                  importa porque te tengo a tí, adoro demasiado esta referencia
+                  a los tatuajes porque llegó en el momento indicado y nunca me
+                  había fijado antes msmsms.
+                </div>
+              </div>
+            </div>
+
+            So don't you worry your pretty, little mind<br />
+            People throw rocks at things that shine<br />
+            And life makes love look hard<br />
+            And don't you worry your pretty, little mind<br />
+            People throw rocks at things that shine<br />
+            But they can't take what's ours<br />
+            <div class="lyric-wrapper" onclick="toggleNote(this)">
+              <span class="lyric-line">They can't take what's ours</span>
+              <div class="explanation-box">
+                <div class="explanation-inner">
+                  <strong>"No pueden tomar lo que es de nosotras"</strong>
+                  <br /><br />
+                  Y TE PROMETO CORAZÓN, que nadie podrá dañar lo que tenemos,
+                  porque es nuestro y siempre lo será.
+                </div>
+              </div>
+            </div>
+            The stakes are high, the water's rough<br />
+            But this love is ours<br />
+          </div>
+        </div>
+
+        <!-- TRACK 12: TIMELESS -->
+        <div class="song-slide theme-speaknow" id="slide-11">
+          <div
+            class="album-artwork"
+            style="background-image: url(&quot;pics/speaknow.png&quot;)"
+          ></div>
+          <div>
+            <h2 class="track-name">Timeless</h2>
+            <p class="album-name">Track 12/12 — Speak Now</p>
+          </div>
+
+          <audio id="audio-11" src="audio/track12.mp3" preload="auto"></audio>
+          <div class="lyrics-viewport">
+            Down the block there's an antique shop<br />
+            And something in my head said "stop", so I walked in<br />
+            On the counter was a cardboard box<br />
+            And the sign said photos 25 cents each<br />
+            Black and white saw a 30s bride and<br />
+            Two lovers laughing on the porch of their first house<br />
+            The kind of love that you only find once in a lifetime<br />
+            The kind you don't put down<br />
+            And that's when I called you, and it's so hard to explain<br />
+            But in those photos, I saw us instead<br />
+
+            <div class="lyric-wrapper" onclick="toggleNote(this)">
+              <span class="lyric-line"
+                >And somehow I know that you and I would've found each other<br />
+                In another life you still would've turned my head</span
+              >
+              <div class="explanation-box">
+                <div class="explanation-inner">
+                  <strong
+                    >"Y de alguna manera sé que tú y yo nos habríamos
+                    encontrado, en otra vida, todavía me habrías llamado la
+                    atención"</strong
+                  >
+                  <br /><br />
+                  Por último pero no menos importante timeless, nos veo a tí y a
+                  mí en todo, y sé que en cualquier universo habríamos estado
+                  juntas.
+                </div>
+              </div>
+            </div>
+
+            Even if we'd met on a crowded street in 1944<br />
+            And you were headed off to fight in the war<br />
+            You still would've been mine<br />
+            We would've been timeless<br />
+
+            <div class="lyric-wrapper" onclick="toggleNote(this)">
+              <span class="lyric-line"
+                >I would've read your love letters every single night<br />
+                And prayed to God you'd be coming home all right</span
+              >
+              <div class="explanation-box">
+                <div class="explanation-inner">
+                  <strong
+                    >"Habría leído tus cartas de amor cada noche y pedido a Dios
+                    que volverías bien a casa"</strong
+                  >
+                  <br /><br />
+                  Pensar en todas las posibilidades de conocernos en cualquier
+                  vida msmsms, en todos estos escenarios sé que la historia
+                  seguiría siendo la misma, seríamos eternas.
+                </div>
+              </div>
+            </div>
+
+            And you would've been fine, we would've been timeless<br />
+            'Cause I believe that we were supposed to find this<br />
+            So even in a different life<br />
+            You still would've been mine<br />
+            We would've been timeless<br />
+            I had to smile when it caught my eye<br />
+            There was one of a teenage couple in a driveway<br />
+            Holding hands on the way to a dance<br />
+            And the date on the back said 1958<br />
+            Which brought me back to the first time I saw you<br />
+            Time stood still like something in this old shop<br />
+            I thought about it as I started looking 'round<br />
+            At these precious things that time forgot<br />
+            That's when I came upon a book covered in cobwebs<br />
+            Story of a romance torn apart by fate<br />
+
+            <div class="lyric-wrapper" onclick="toggleNote(this)">
+              <span class="lyric-line"
+                >Hundreds of years ago, they fell in love like we did<br />
+                And I'd die for you in the same way
+              </span>
+              <div class="explanation-box">
+                <div class="explanation-inner">
+                  <strong
+                    >"Hace cientos de años se enamoraron como nosotras, y
+                    moriría por tí del mismo modo"</strong
+                  >
+                  <br /><br />
+                  AY, en serio que todas las historias de amor me recuerdan a
+                  nosotras, y verdaderamente morir por tí sería lo mínimo que
+                  haría, estoy muy enamorada de tí, BABY I WOULD DIE FOR UUUUU.
+                </div>
+              </div>
+            </div>
+
+            If I first saw your face<br />
+            In the 1500s up in a foreign land<br />
+            And I was forced to marry another man<br />
+            You still would've been mine<br />
+            We would've been timeless<br />
+            I would've read your love letters every single night<br />
+            And run away and left it all behind<br />
+            You still would've been mine<br />
+            We would've been timeless<br />
+
+            <div class="lyric-wrapper" onclick="toggleNote(this)">
+              <span class="lyric-line"
+                >'Cause I believe that we were supposed to find this<br />
+                So even in a different life<br />
+                You still would've been mine<br />
+                We would've been timeless
+              </span>
+              <div class="explanation-box">
+                <div class="explanation-inner">
+                  <strong
+                    >"Porque creo que estábamos destinadas a encontrar esto, así
+                    que incluso en otra vida habrías sido mía, habríamos sido
+                    eternas"</strong
+                  >
+                  <br /><br />
+                  Ya te he explicado esta canción antes y como siento que es
+                  nuestra, pero te lo diría un millón de veces, estoy más que
+                  segura de que esto era lo que el destino quería para nosotras,
+                  Y SEGUIREMOS SIENDO ETERNAS.
+                </div>
+              </div>
+            </div>
+
+            Time breaks down your mind and body<br />
+            Don't you let it touch your soul<br />
+            It was like an age old classic<br />
+            The first time that you saw me<br />
+            <div class="lyric-wrapper" onclick="toggleNote(this)">
+              <span class="lyric-line"
+                >The story started when you said hello<br />
+                In a crowded room a few short years ago<br />
+                And sometimes there's no proof, you just know
+              </span>
+              <div class="explanation-box">
+                <div class="explanation-inner">
+                  <strong
+                    >"La historia empezó cuando dijiste hola. En una habitación
+                    llena hace algunos años, y a veces no hay pruebas, solo lo
+                    sabes"</strong
+                  >
+                  <br /><br />
+                  CUANDO LO SABES LO SABES, siempre vas a ser mía y siempre
+                  vamos a ser eternas, estoy demasiado feliz y agradecida de
+                  como empezó nuestra historia y como va, no puedo esperar para
+                  contarle todo a nuestra Charlottesita.
+                </div>
+              </div>
+            </div>
+
+            You're always gonna be mine<br />
+            We're gonna be<br />
+
+            <div class="lyric-wrapper" onclick="toggleNote(this)">
+              <span class="lyric-line"
+                >I'm gonna love you when our hair is turning gray<br />
+                We'll have a cardboard box of photos of the life we made<br />
+                And you'll say "Oh my"<br />
+                We really were timeless
+              </span>
+              <div class="explanation-box">
+                <div class="explanation-inner">
+                  <strong
+                    >"Te voy a amar cuando nuestro cabello se esté volviendo
+                    gris, tendremos una caja de cartón con fotos de la vida que
+                    hicimos, y dirás omg, en verdad fuimos eternas"</strong
+                  >
+                  <br /><br />
+                  Ahora sí la última línea, espero te haya gustado, te amo
+                  demasiado, y gracias por este año que ha pasado tan rápido y a
+                  la vez es una eternidad, espero que sigamos siendo eternas por
+                  el resto de nuestra vida, porque te aseguro que de aquí a que
+                  seamos mayores y veamos las fotos de nuestra vida, cada día te
+                  voy a estar amando más y verás como si fuimos eternas, eres el
+                  amor de mi vida.
+                </div>
+              </div>
+            </div>
+
+            We're gonna be timeless, timeless<br />
+            You still would've been mine, we would've been<br />
+            Even if we met<br />
+            On a crowded street in 1944<br />
+            Still would've been mine<br />
+            You would've been<br />
+            Down the block there's an antique shop<br />
+            And something in my head said "stop", so I walked in<br />
+          </div>
+        </div>
+
+        <!-- ✅ CONTROLES DENTRO DEL PLAYER-CARD -->
+        <div class="player-controls">
+          <button class="control-btn" onclick="changeTrack(-1)">⏮</button>
+          <button
+            class="control-btn main-play-btn"
+            id="masterPlayBtn"
+            onclick="togglePlay()"
+          >
+            ▶
+          </button>
+          <button class="control-btn" onclick="changeTrack(1)">⏭</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      let currentTrackIndex = 0;
+      const totalTracks = 24;
+      let isPlaying = false;
+
+      function startExperience() {
+        const intro = document.getElementById("introScreen");
+        intro.style.opacity = "0";
+        intro.style.visibility = "hidden";
+        document.body.classList.add("app-ready");
+
+        setTimeout(() => {
+          togglePlay();
+        }, 600);
+      }
+
+      function togglePlay() {
+        const currentAudio = document.getElementById(
+          `audio-${currentTrackIndex}`,
+        );
+        const playBtn = document.getElementById("masterPlayBtn");
+
+        if (isPlaying) {
+          currentAudio.pause();
+          playBtn.innerText = "▶";
+          isPlaying = false;
+        } else {
+          currentAudio
+            .play()
+            .catch((e) => console.log("Esperando interacción para reproducir"));
+          playBtn.innerText = "⏸";
+          isPlaying = true;
+        }
+      }
+
+      function changeTrack(direction) {
+        const currentAudio = document.getElementById(
+          `audio-${currentTrackIndex}`,
+        );
+        currentAudio.pause();
+        currentAudio.currentTime = 0;
+
+        document
+          .getElementById(`slide-${currentTrackIndex}`)
+          .classList.remove("current-active");
+
+        currentTrackIndex += direction;
+        if (currentTrackIndex >= totalTracks) currentTrackIndex = 0;
+        if (currentTrackIndex < 0) currentTrackIndex = totalTracks - 1;
+
+        const nextSlide = document.getElementById(`slide-${currentTrackIndex}`);
+        nextSlide.classList.add("current-active");
+
+        const playerCard = document.getElementById("playerCard");
+
+        const nextAudio = document.getElementById(`audio-${currentTrackIndex}`);
+        const playBtn = document.getElementById("masterPlayBtn");
+
+        if (isPlaying) {
+          nextAudio.play().catch((e) => console.log("Error de carga"));
+        } else {
+          isPlaying = true;
+          playBtn.innerText = "⏸";
+          nextAudio.play().catch((e) => console.log("Error de carga"));
+        }
+      }
+
+      function toggleNote(element) {
+        element.classList.toggle("active");
+      }
+    </script>
+  </body>
+</html>
