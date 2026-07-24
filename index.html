@@ -102,14 +102,19 @@
       }
 
       /* Subtítulo */
-      .subtitle {
-        font-family: "Inter", sans-serif;
-        font-weight: 600;
-        font-size: 16px;
-        letter-spacing: 3px;
-        color: #c4b5fd;
-        margin-bottom: 20px;
-      }
+/* Subtítulo */
+.subtitle {
+  font-family: "Inter", sans-serif;
+  font-weight: 600;
+  font-size: 16px;
+  letter-spacing: 3px;
+  background: linear-gradient(to right, #f472b6, #6ee7b7); /* 🔥 ROSA A VERDE */
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 20px;
+          display: inline-block;
+        text-shadow: 0 0 30px rgba(110, 231, 183, 0.15);
+}
 
       /* Botón "Abrir Álbum" */
       .enter-btn {
@@ -158,6 +163,25 @@
       .playlist-link:active {
         transform: scale(0.95);
       }
+
+      /* ===== CONTENEDOR DE BOTONES ===== */
+.buttons-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  margin-top: 20px;
+}
+
+.buttons-container .enter-btn,
+.buttons-container .playlist-link,
+.buttons-container .letter-link {
+  width: 100%;
+  max-width: 280px;
+  text-align: center;
+  margin-top: 0; /* Quitar márgenes individuales */
+}
 
       .letter-link {
         display: inline-block;
@@ -589,21 +613,23 @@
     <div id="introScreen">
       <div class="intro-content">
         <h1>Ari & Sofi</h1>
-        <p class="subtitle">12 months, 12 songs</p>
+        <p class="subtitle">Taylor's Version</p>
 
-        <button class="enter-btn" onclick="startExperience()">
-          🎵 Abrir Álbum
-        </button>
-        <a
-          href="https://open.spotify.com/playlist/08yCg5eL6cU3CJ345yQgvc?si=990d49e3d2e741d6"
-          target="_blank"
-          class="playlist-link"
-        >
-          🎧 Playlist Spotify
-        </a>
-        <a href="docs/carta.pdf" download="carta.pdf" class="letter-link">
-          💌 Leer cartita
-        </a>
+<div class="buttons-container">
+      <button class="enter-btn" onclick="startExperience()">
+        🎵 Abrir Álbum
+      </button>
+      <a
+        href="https://open.spotify.com/playlist/08yCg5eL6cU3CJ345yQgvc?si=990d49e3d2e741d6"
+        target="_blank"
+        class="playlist-link"
+      >
+        🎧 Playlist Spotify
+      </a>
+      <a href="docs/carta.pdf" download="carta.pdf" class="letter-link">
+        💌 Leer cartita
+      </a>
+    </div>
       </div>
     </div>
 
@@ -3644,39 +3670,39 @@
 
   // ===== FUNCIÓN PARA VOLVER A LA PANTALLA DE INICIO =====
   function goHome() {
-    // Detener el audio actual
-    const currentAudio = document.getElementById(`audio-${currentTrackIndex}`);
-    if (currentAudio) {
-      currentAudio.pause();
-      currentAudio.currentTime = 0;
-    }
-    
-    // RESETEAR EL ÍNDICE A 0
-    currentTrackIndex = 0;
-    document.getElementById('trackSelector').value = 0;
-    
-    // Ocultar la aplicación
-    document.body.classList.remove('app-ready');
-    const appContainer = document.querySelector('.app-container');
-    if (appContainer) {
-      appContainer.style.opacity = '0';
-      appContainer.style.transform = 'translateY(20px)';
-    }
-    
-    // Mostrar la pantalla de inicio
-    const intro = document.getElementById('introScreen');
-    if (intro) {
-      intro.style.opacity = '1';
-      intro.style.visibility = 'visible';
-    }
-    
-    // Cambiar el estado del botón de play
-    const playBtn = document.getElementById('masterPlayBtn');
-    if (playBtn) {
-      playBtn.innerText = '▶';
-    }
-    isPlaying = false;
+  // Detener el audio actual
+  const currentAudio = document.getElementById(`audio-${currentTrackIndex}`);
+  if (currentAudio) {
+    currentAudio.pause();
+    currentAudio.currentTime = 0;
   }
+  
+  // RESETEAR TODO
+  currentTrackIndex = 0;
+  document.getElementById('trackSelector').value = 0;
+  isPlaying = false;
+  
+  // Ocultar la aplicación
+  document.body.classList.remove('app-ready');
+  const appContainer = document.querySelector('.app-container');
+  if (appContainer) {
+    appContainer.style.opacity = '0';
+    appContainer.style.transform = 'translateY(20px)';
+  }
+  
+  // Mostrar la pantalla de inicio
+  const intro = document.getElementById('introScreen');
+  if (intro) {
+    intro.style.opacity = '1';
+    intro.style.visibility = 'visible';
+  }
+  
+  // Cambiar el estado del botón de play
+  const playBtn = document.getElementById('masterPlayBtn');
+  if (playBtn) {
+    playBtn.innerText = '▶';
+  }
+}
 
   // ===== FUNCIÓN PARA REPRODUCIR/PAUSAR =====
   function togglePlay() {
@@ -3779,6 +3805,33 @@
   function toggleNote(element) {
     element.classList.toggle("active");
   }
+
+      // ===== SOBRESCRIBIR startExperience PARA QUE FUNCIONE SIEMPRE =====
+const originalStart = startExperience;
+startExperience = function() {
+  // Asegurar que la intro esté visible primero
+  const intro = document.getElementById('introScreen');
+  intro.style.opacity = '1';
+  intro.style.visibility = 'visible';
+  
+  // Resetear todo
+  currentTrackIndex = 0;
+  document.getElementById('trackSelector').value = 0;
+  isPlaying = false;
+  
+  // Ocultar la aplicación
+  document.body.classList.remove('app-ready');
+  const appContainer = document.querySelector('.app-container');
+  if (appContainer) {
+    appContainer.style.opacity = '0';
+    appContainer.style.transform = 'translateY(20px)';
+  }
+  
+  // Ejecutar la función original después de 100ms
+  setTimeout(() => {
+    originalStart();
+  }, 100);
+};
 </script>
   </body>
 </html>
