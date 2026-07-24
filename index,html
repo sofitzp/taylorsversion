@@ -611,11 +611,11 @@
   </head>
   <body>
     <div id="introScreen">
-      <div class="intro-content">
-        <h1>Ari & Sofi</h1>
-        <p class="subtitle">Taylor's Version</p>
+  <div class="intro-content">
+    <h1>Ari & Sofi</h1>
+    <p class="subtitle">Taylor's Version</p>
 
-<div class="buttons-container">
+    <div class="buttons-container">
       <button class="enter-btn" onclick="startExperience()">
         🎵 Abrir Álbum
       </button>
@@ -630,8 +630,8 @@
         💌 Leer cartita
       </a>
     </div>
-      </div>
-    </div>
+  </div>
+</div>
 
     <div class="app-container">
       <div class="player-card" id="playerCard">
@@ -3668,21 +3668,41 @@
     }, 600);
   }
 
-  // ===== FUNCIÓN PARA VOLVER A LA PANTALLA DE INICIO =====
-  function goHome() {
-  // Detener el audio actual
+// ===== FUNCIÓN PARA INICIAR LA EXPERIENCIA =====
+function startExperience() {
+  const intro = document.getElementById("introScreen");
+  intro.style.opacity = "0";
+  intro.style.visibility = "hidden";
+  document.body.classList.add("app-ready");
+  
+  currentTrackIndex = 0;
+  document.getElementById('trackSelector').value = 0;
+  
+  document.querySelectorAll('.song-slide').forEach(slide => {
+    slide.classList.remove('current-active');
+  });
+  document.getElementById('slide-0').classList.add('current-active');
+
+  const audio = document.getElementById('audio-0');
+  if (audio) audio.currentTime = 0;
+
+  setTimeout(() => {
+    togglePlay();
+  }, 600);
+}
+
+// ===== FUNCIÓN PARA VOLVER A LA PANTALLA DE INICIO =====
+function goHome() {
   const currentAudio = document.getElementById(`audio-${currentTrackIndex}`);
   if (currentAudio) {
     currentAudio.pause();
     currentAudio.currentTime = 0;
   }
   
-  // RESETEAR TODO
   currentTrackIndex = 0;
   document.getElementById('trackSelector').value = 0;
   isPlaying = false;
   
-  // Ocultar la aplicación
   document.body.classList.remove('app-ready');
   const appContainer = document.querySelector('.app-container');
   if (appContainer) {
@@ -3690,18 +3710,14 @@
     appContainer.style.transform = 'translateY(20px)';
   }
   
-  // Mostrar la pantalla de inicio
   const intro = document.getElementById('introScreen');
   if (intro) {
     intro.style.opacity = '1';
     intro.style.visibility = 'visible';
   }
   
-  // Cambiar el estado del botón de play
   const playBtn = document.getElementById('masterPlayBtn');
-  if (playBtn) {
-    playBtn.innerText = '▶';
-  }
+  if (playBtn) playBtn.innerText = '▶';
 }
 
   // ===== FUNCIÓN PARA REPRODUCIR/PAUSAR =====
