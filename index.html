@@ -65,7 +65,7 @@
             rgba(244, 114, 182, 0.3)
           ),
           url("pics/fondo.jpg");
-        background-size: 120% auto;
+        background-size: 150% auto;
         background-position: center center;
         background-repeat: no-repeat;
         display: flex;
@@ -227,20 +227,18 @@
 
       /* ===== MAIN APPLICATION ===== */
       .app-container {
-        width: 100%;
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        padding: 20px;
-        box-sizing: border-box;
-        opacity: 0;
-        transform: translateY(20px);
-        transition:
-          opacity 0.8s ease,
-          transform 0.8s ease;
-      }
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  box-sizing: border-box;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
 
       .app-ready .app-container {
         opacity: 1;
@@ -454,12 +452,24 @@
         transform: scale(0.85);
       }
 
-      .main-play-btn {
-        font-size: 28px;
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 50px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-      }
+.main-play-btn {
+  font-size: 18px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 50px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: all 0.3s ease;
+}
+
+.main-play-btn:active {
+  transform: scale(0.9);
+  background: rgba(255, 255, 255, 0.15);
+}
 
 .song-slide {
   display: none;
@@ -3612,14 +3622,14 @@
   const totalTracks = 15;
   let isPlaying = false;
 
-  // ===== FUNCIÓN PARA INICIAR LA EXPERIENCIA (UNIFICADA) =====
+  // ===== FUNCIÓN PARA INICIAR LA EXPERIENCIA =====
   function startExperience() {
     const intro = document.getElementById("introScreen");
     intro.style.opacity = "0";
     intro.style.visibility = "hidden";
     document.body.classList.add("app-ready");
     
-    // 🔥 RESETEAR A LA PRIMERA CANCIÓN
+    // RESETEAR A LA PRIMERA CANCIÓN
     currentTrackIndex = 0;
     document.getElementById('trackSelector').value = 0;
     
@@ -3628,6 +3638,12 @@
       slide.classList.remove('current-active');
     });
     document.getElementById('slide-0').classList.add('current-active');
+
+    // Asegurar que el audio esté listo
+    const audio = document.getElementById('audio-0');
+    if (audio) {
+      audio.currentTime = 0;
+    }
 
     setTimeout(() => {
       togglePlay();
@@ -3643,7 +3659,7 @@
       currentAudio.currentTime = 0;
     }
     
-    // 🔥 RESETEAR EL ÍNDICE A 0
+    // RESETEAR EL ÍNDICE A 0
     currentTrackIndex = 0;
     document.getElementById('trackSelector').value = 0;
     
@@ -3652,6 +3668,7 @@
     const appContainer = document.querySelector('.app-container');
     if (appContainer) {
       appContainer.style.opacity = '0';
+      appContainer.style.transform = 'translateY(20px)';
     }
     
     // Mostrar la pantalla de inicio
@@ -3674,16 +3691,25 @@
     const currentAudio = document.getElementById(`audio-${currentTrackIndex}`);
     const playBtn = document.getElementById("masterPlayBtn");
 
+    if (!currentAudio) return;
+
     if (isPlaying) {
       currentAudio.pause();
-      playBtn.innerText = "▶"; // 🔥 PLAY (sin emoji)
+      playBtn.innerText = "▶";
       isPlaying = false;
     } else {
-      currentAudio
-        .play()
-        .catch((e) => console.log("Esperando interacción para reproducir"));
-      playBtn.innerText = "▐▐"; // 🔥 PAUSA (sin emoji)
-      isPlaying = true;
+      currentAudio.play()
+        .then(() => {
+          playBtn.innerText = "▐▐";
+          isPlaying = true;
+        })
+        .catch((e) => {
+          console.log("Error al reproducir:", e);
+          // Si hay error, intentar de nuevo
+          setTimeout(() => {
+            currentAudio.play().catch(() => {});
+          }, 100);
+        });
     }
   }
 
@@ -3707,19 +3733,18 @@
     const nextSlide = document.getElementById(`slide-${currentTrackIndex}`);
     if (nextSlide) {
       nextSlide.classList.add("current-active");
-      // 🔥 FORZAR RE-FLOW PARA ANIMACIÓN
-      void nextSlide.offsetWidth;
     }
 
     const nextAudio = document.getElementById(`audio-${currentTrackIndex}`);
     const playBtn = document.getElementById("masterPlayBtn");
 
-    if (isPlaying) {
-      nextAudio.play().catch((e) => console.log("Error de carga"));
-    } else {
+    if (isPlaying && nextAudio) {
+      nextAudio.play().catch(() => {});
+      playBtn.innerText = "▐▐";
+    } else if (nextAudio) {
       isPlaying = true;
       playBtn.innerText = "▐▐";
-      nextAudio.play().catch((e) => console.log("Error de carga"));
+      nextAudio.play().catch(() => {});
     }
 
     document.getElementById("trackSelector").value = currentTrackIndex;
@@ -3746,7 +3771,6 @@
     const nextSlide = document.getElementById(`slide-${currentTrackIndex}`);
     if (nextSlide) {
       nextSlide.classList.add("current-active");
-      void nextSlide.offsetWidth;
     }
 
     document.getElementById("trackSelector").value = currentTrackIndex;
