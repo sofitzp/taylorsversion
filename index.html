@@ -11,7 +11,7 @@
       @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap");
 
       :root {
-        /* Colores suaves (pastel) para la intro */
+        
         --color-soft-green: #6ee7b7;
         --color-soft-pink: #f9a8d4;
         --color-soft-purple: #c4b5fd;
@@ -19,7 +19,6 @@
         --bg-main: #060913;
         --player-bg: rgba(255, 255, 255, 0.03);
 
-        /* Colores de Acentos por Era */
         --color-reputation: #71717a;
         --color-speaknow: #c084fc;
         --color-lover: #f472b6;
@@ -66,8 +65,8 @@
             rgba(244, 114, 182, 0.3)
           ),
           url("pics/fondo.jpg");
-        background-size: contain;
-        background-position: center bottom;
+        background-size: 120% auto;
+        background-position: center center;
         background-repeat: no-repeat;
         display: flex;
         flex-direction: column;
@@ -261,7 +260,7 @@
         text-align: center;
         display: flex;
         flex-direction: column;
-        height: 85vh;
+        height: 80vh;
         justify-content: space-between;
       }
 
@@ -333,6 +332,7 @@
         margin-bottom: 20px;
         border: 1px solid rgba(255, 255, 255, 0.02);
         -webkit-overflow-scrolling: touch;
+        max-height: 40vh;
       }
 
       /* Estilos de las líneas */
@@ -461,21 +461,23 @@
         border: 1px solid rgba(255, 255, 255, 0.1);
       }
 
-      .song-slide {
-        display: none;
-        height: 100%;
-        flex-direction: column;
-        justify-content: space-between;
-      }
+.song-slide {
+  display: none;
+  height: 100%;
+  flex-direction: column;
+  justify-content: space-between;
+  opacity: 0;
+  transition: opacity 0.5s ease; 
+}
 
-      .song-slide.current-active {
-        display: flex;
-      }
+.song-slide.current-active {
+  display: flex;
+  opacity: 1; 
+}
 
-      /* ===== SELECTOR Y BOTÓN DE INICIO (arriba) ===== */
       .track-selector-wrapper {
         display: flex;
-        justify-content: space-between; /* 🔥 SEPARA LA CASITA DEL SELECTOR */
+        justify-content: space-between; 
         align-items: center;
         margin-top: 5px;
         margin-bottom: 5px;
@@ -3606,152 +3608,161 @@
     </div>
 
     <script>
-      let currentTrackIndex = 0;
-      const totalTracks = 15;
-      let isPlaying = false;
+  let currentTrackIndex = 0;
+  const totalTracks = 15;
+  let isPlaying = false;
 
-      function startExperience() {
-        const intro = document.getElementById("introScreen");
-        intro.style.opacity = "0";
-        intro.style.visibility = "hidden";
-        document.body.classList.add("app-ready");
+  // ===== FUNCIÓN PARA INICIAR LA EXPERIENCIA (UNIFICADA) =====
+  function startExperience() {
+    const intro = document.getElementById("introScreen");
+    intro.style.opacity = "0";
+    intro.style.visibility = "hidden";
+    document.body.classList.add("app-ready");
+    
+    // 🔥 RESETEAR A LA PRIMERA CANCIÓN
+    currentTrackIndex = 0;
+    document.getElementById('trackSelector').value = 0;
+    
+    // Mostrar solo el slide de la canción 0
+    document.querySelectorAll('.song-slide').forEach(slide => {
+      slide.classList.remove('current-active');
+    });
+    document.getElementById('slide-0').classList.add('current-active');
 
-        setTimeout(() => {
-          togglePlay();
-        }, 600);
+    setTimeout(() => {
+      togglePlay();
+    }, 600);
+  }
+
+  // ===== FUNCIÓN PARA VOLVER A LA PANTALLA DE INICIO =====
+  function goHome() {
+    // Detener el audio actual
+    const currentAudio = document.getElementById(`audio-${currentTrackIndex}`);
+    if (currentAudio) {
+      currentAudio.pause();
+      currentAudio.currentTime = 0;
+    }
+    
+    // 🔥 RESETEAR EL ÍNDICE A 0
+    currentTrackIndex = 0;
+    document.getElementById('trackSelector').value = 0;
+    
+    // Ocultar la aplicación
+    document.body.classList.remove('app-ready');
+    const appContainer = document.querySelector('.app-container');
+    if (appContainer) {
+      appContainer.style.opacity = '0';
+    }
+    
+    // Mostrar la pantalla de inicio
+    const intro = document.getElementById('introScreen');
+    if (intro) {
+      intro.style.opacity = '1';
+      intro.style.visibility = 'visible';
+    }
+    
+    // Cambiar el estado del botón de play
+    const playBtn = document.getElementById('masterPlayBtn');
+    if (playBtn) {
+      playBtn.innerText = '▶';
+    }
+    isPlaying = false;
+  }
+
+  // ===== FUNCIÓN PARA REPRODUCIR/PAUSAR =====
+  function togglePlay() {
+    const currentAudio = document.getElementById(`audio-${currentTrackIndex}`);
+    const playBtn = document.getElementById("masterPlayBtn");
+
+    if (isPlaying) {
+      currentAudio.pause();
+      playBtn.innerText = "▶"; // 🔥 PLAY (sin emoji)
+      isPlaying = false;
+    } else {
+      currentAudio
+        .play()
+        .catch((e) => console.log("Esperando interacción para reproducir"));
+      playBtn.innerText = "▐▐"; // 🔥 PAUSA (sin emoji)
+      isPlaying = true;
+    }
+  }
+
+  // ===== FUNCIÓN PARA CAMBIAR DE CANCIÓN =====
+  function changeTrack(direction) {
+    const currentAudio = document.getElementById(`audio-${currentTrackIndex}`);
+    if (currentAudio) {
+      currentAudio.pause();
+      currentAudio.currentTime = 0;
+    }
+
+    const currentSlide = document.getElementById(`slide-${currentTrackIndex}`);
+    if (currentSlide) {
+      currentSlide.classList.remove("current-active");
+    }
+
+    currentTrackIndex += direction;
+    if (currentTrackIndex >= totalTracks) currentTrackIndex = 0;
+    if (currentTrackIndex < 0) currentTrackIndex = totalTracks - 1;
+
+    const nextSlide = document.getElementById(`slide-${currentTrackIndex}`);
+    if (nextSlide) {
+      nextSlide.classList.add("current-active");
+      // 🔥 FORZAR RE-FLOW PARA ANIMACIÓN
+      void nextSlide.offsetWidth;
+    }
+
+    const nextAudio = document.getElementById(`audio-${currentTrackIndex}`);
+    const playBtn = document.getElementById("masterPlayBtn");
+
+    if (isPlaying) {
+      nextAudio.play().catch((e) => console.log("Error de carga"));
+    } else {
+      isPlaying = true;
+      playBtn.innerText = "▐▐";
+      nextAudio.play().catch((e) => console.log("Error de carga"));
+    }
+
+    document.getElementById("trackSelector").value = currentTrackIndex;
+  }
+
+  // ===== FUNCIÓN PARA IR A CANCIÓN ESPECÍFICA =====
+  function goToTrack(index) {
+    index = parseInt(index);
+    if (index === currentTrackIndex) return;
+
+    const currentAudio = document.getElementById(`audio-${currentTrackIndex}`);
+    if (currentAudio) {
+      currentAudio.pause();
+      currentAudio.currentTime = 0;
+    }
+
+    const currentSlide = document.getElementById(`slide-${currentTrackIndex}`);
+    if (currentSlide) {
+      currentSlide.classList.remove("current-active");
+    }
+
+    currentTrackIndex = index;
+
+    const nextSlide = document.getElementById(`slide-${currentTrackIndex}`);
+    if (nextSlide) {
+      nextSlide.classList.add("current-active");
+      void nextSlide.offsetWidth;
+    }
+
+    document.getElementById("trackSelector").value = currentTrackIndex;
+
+    if (isPlaying) {
+      const nextAudio = document.getElementById(`audio-${currentTrackIndex}`);
+      if (nextAudio) {
+        nextAudio.play().catch(() => {});
       }
+    }
+  }
 
-      // Agrega esto en tu JavaScript
-      function goHome() {
-        // Detener el audio actual
-        const currentAudio = document.getElementById(
-          `audio-${currentTrackIndex}`,
-        );
-        if (currentAudio) {
-          currentAudio.pause();
-          currentAudio.currentTime = 0;
-        }
-
-        // Ocultar la aplicación
-        document.body.classList.remove("app-ready");
-        document.querySelector(".app-container").style.opacity = "0";
-
-        // Mostrar la intro
-        const intro = document.getElementById("introScreen");
-        intro.style.opacity = "1";
-        intro.style.visibility = "visible";
-
-        document.getElementById("backToHomeBtn").style.display = "none";
-
-        document.getElementById("masterPlayBtn").innerText = "▶";
-        isPlaying = false;
-      }
-
-      function startExperience() {
-        const intro = document.getElementById("introScreen");
-        intro.style.opacity = "0";
-        intro.style.visibility = "hidden";
-        document.body.classList.add("app-ready");
-
-        document.getElementById("backToHomeBtn").style.display = "block";
-
-        setTimeout(() => {
-          togglePlay();
-        }, 600);
-      }
-
-      function togglePlay() {
-        const currentAudio = document.getElementById(
-          `audio-${currentTrackIndex}`,
-        );
-        const playBtn = document.getElementById("masterPlayBtn");
-
-        if (isPlaying) {
-          currentAudio.pause();
-          playBtn.innerText = "▶";
-          isPlaying = false;
-        } else {
-          currentAudio
-            .play()
-            .catch((e) => console.log("Esperando interacción para reproducir"));
-          playBtn.innerText = "⏸";
-          isPlaying = true;
-        }
-      }
-
-      function changeTrack(direction) {
-        const currentAudio = document.getElementById(
-          `audio-${currentTrackIndex}`,
-        );
-        currentAudio.pause();
-        currentAudio.currentTime = 0;
-
-        document
-          .getElementById(`slide-${currentTrackIndex}`)
-          .classList.remove("current-active");
-
-        currentTrackIndex += direction;
-        if (currentTrackIndex >= totalTracks) currentTrackIndex = 0;
-        if (currentTrackIndex < 0) currentTrackIndex = totalTracks - 1;
-
-        const nextSlide = document.getElementById(`slide-${currentTrackIndex}`);
-        nextSlide.classList.add("current-active");
-
-        const nextAudio = document.getElementById(`audio-${currentTrackIndex}`);
-        const playBtn = document.getElementById("masterPlayBtn");
-
-        if (isPlaying) {
-          nextAudio.play().catch((e) => console.log("Error de carga"));
-        } else {
-          isPlaying = true;
-          playBtn.innerText = "⏸";
-          nextAudio.play().catch((e) => console.log("Error de carga"));
-        }
-
-        document.getElementById("trackSelector").value = currentTrackIndex;
-      }
-
-      function toggleNote(element) {
-        element.classList.toggle("active");
-      }
-
-      function goToTrack(index) {
-        index = parseInt(index);
-        if (index === currentTrackIndex) return;
-
-        const currentAudio = document.getElementById(
-          `audio-${currentTrackIndex}`,
-        );
-        if (currentAudio) {
-          currentAudio.pause();
-          currentAudio.currentTime = 0;
-        }
-
-        const currentSlide = document.getElementById(
-          `slide-${currentTrackIndex}`,
-        );
-        if (currentSlide) {
-          currentSlide.classList.remove("current-active");
-        }
-
-        currentTrackIndex = index;
-
-        const nextSlide = document.getElementById(`slide-${currentTrackIndex}`);
-        if (nextSlide) {
-          nextSlide.classList.add("current-active");
-        }
-
-        document.getElementById("trackSelector").value = currentTrackIndex;
-
-        if (isPlaying) {
-          const nextAudio = document.getElementById(
-            `audio-${currentTrackIndex}`,
-          );
-          if (nextAudio) {
-            nextAudio.play().catch(() => {});
-          }
-        }
-      }
-    </script>
+  // ===== FUNCIÓN PARA MOSTRAR/OCULTAR EXPLICACIONES =====
+  function toggleNote(element) {
+    element.classList.toggle("active");
+  }
+</script>
   </body>
 </html>
