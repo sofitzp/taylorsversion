@@ -3635,12 +3635,12 @@
       </div>
     </div>
 
-    <script>
+<script>
   let currentTrackIndex = 0;
   const totalTracks = 15;
   let isPlaying = false;
 
-  // ===== FUNCIÓN PARA INICIAR LA EXPERIENCIA =====
+  // ===== FUNCIÓN PARA INICIAR LA EXPERIENCIA (ÚNICA) =====
   function startExperience() {
     const intro = document.getElementById("introScreen");
     intro.style.opacity = "0";
@@ -3668,57 +3668,34 @@
     }, 600);
   }
 
-// ===== FUNCIÓN PARA INICIAR LA EXPERIENCIA =====
-function startExperience() {
-  const intro = document.getElementById("introScreen");
-  intro.style.opacity = "0";
-  intro.style.visibility = "hidden";
-  document.body.classList.add("app-ready");
-  
-  currentTrackIndex = 0;
-  document.getElementById('trackSelector').value = 0;
-  
-  document.querySelectorAll('.song-slide').forEach(slide => {
-    slide.classList.remove('current-active');
-  });
-  document.getElementById('slide-0').classList.add('current-active');
-
-  const audio = document.getElementById('audio-0');
-  if (audio) audio.currentTime = 0;
-
-  setTimeout(() => {
-    togglePlay();
-  }, 600);
-}
-
-// ===== FUNCIÓN PARA VOLVER A LA PANTALLA DE INICIO =====
-function goHome() {
-  const currentAudio = document.getElementById(`audio-${currentTrackIndex}`);
-  if (currentAudio) {
-    currentAudio.pause();
-    currentAudio.currentTime = 0;
+  // ===== FUNCIÓN PARA VOLVER A LA PANTALLA DE INICIO =====
+  function goHome() {
+    const currentAudio = document.getElementById(`audio-${currentTrackIndex}`);
+    if (currentAudio) {
+      currentAudio.pause();
+      currentAudio.currentTime = 0;
+    }
+    
+    currentTrackIndex = 0;
+    document.getElementById('trackSelector').value = 0;
+    isPlaying = false;
+    
+    document.body.classList.remove('app-ready');
+    const appContainer = document.querySelector('.app-container');
+    if (appContainer) {
+      appContainer.style.opacity = '0';
+      appContainer.style.transform = 'translateY(20px)';
+    }
+    
+    const intro = document.getElementById('introScreen');
+    if (intro) {
+      intro.style.opacity = '1';
+      intro.style.visibility = 'visible';
+    }
+    
+    const playBtn = document.getElementById('masterPlayBtn');
+    if (playBtn) playBtn.innerText = '▶';
   }
-  
-  currentTrackIndex = 0;
-  document.getElementById('trackSelector').value = 0;
-  isPlaying = false;
-  
-  document.body.classList.remove('app-ready');
-  const appContainer = document.querySelector('.app-container');
-  if (appContainer) {
-    appContainer.style.opacity = '0';
-    appContainer.style.transform = 'translateY(20px)';
-  }
-  
-  const intro = document.getElementById('introScreen');
-  if (intro) {
-    intro.style.opacity = '1';
-    intro.style.visibility = 'visible';
-  }
-  
-  const playBtn = document.getElementById('masterPlayBtn');
-  if (playBtn) playBtn.innerText = '▶';
-}
 
   // ===== FUNCIÓN PARA REPRODUCIR/PAUSAR =====
   function togglePlay() {
@@ -3739,7 +3716,6 @@ function goHome() {
         })
         .catch((e) => {
           console.log("Error al reproducir:", e);
-          // Si hay error, intentar de nuevo
           setTimeout(() => {
             currentAudio.play().catch(() => {});
           }, 100);
@@ -3821,33 +3797,6 @@ function goHome() {
   function toggleNote(element) {
     element.classList.toggle("active");
   }
-
-      // ===== SOBRESCRIBIR startExperience PARA QUE FUNCIONE SIEMPRE =====
-const originalStart = startExperience;
-startExperience = function() {
-  // Asegurar que la intro esté visible primero
-  const intro = document.getElementById('introScreen');
-  intro.style.opacity = '1';
-  intro.style.visibility = 'visible';
-  
-  // Resetear todo
-  currentTrackIndex = 0;
-  document.getElementById('trackSelector').value = 0;
-  isPlaying = false;
-  
-  // Ocultar la aplicación
-  document.body.classList.remove('app-ready');
-  const appContainer = document.querySelector('.app-container');
-  if (appContainer) {
-    appContainer.style.opacity = '0';
-    appContainer.style.transform = 'translateY(20px)';
-  }
-  
-  // Ejecutar la función original después de 100ms
-  setTimeout(() => {
-    originalStart();
-  }, 100);
-};
 </script>
   </body>
 </html>
