@@ -11,7 +11,6 @@
       @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap");
 
       :root {
-        
         --color-soft-green: #6ee7b7;
         --color-soft-pink: #f9a8d4;
         --color-soft-purple: #c4b5fd;
@@ -102,19 +101,23 @@
       }
 
       /* Subtítulo */
-/* Subtítulo */
-.subtitle {
-  font-family: "Inter", sans-serif;
-  font-weight: 600;
-  font-size: 16px;
-  letter-spacing: 3px;
-  background: linear-gradient(to right, #f472b6, #6ee7b7); /* 🔥 ROSA A VERDE */
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  margin-bottom: 20px;
-          display: inline-block;
+      /* Subtítulo */
+      .subtitle {
+        font-family: "Inter", sans-serif;
+        font-weight: 600;
+        font-size: 16px;
+        letter-spacing: 3px;
+        background: linear-gradient(
+          to right,
+          #f472b6,
+          #6ee7b7
+        ); /* 🔥 ROSA A VERDE */
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 20px;
+        display: inline-block;
         text-shadow: 0 0 30px rgba(110, 231, 183, 0.15);
-}
+      }
 
       /* Botón "Abrir Álbum" */
       .enter-btn {
@@ -165,23 +168,23 @@
       }
 
       /* ===== CONTENEDOR DE BOTONES ===== */
-.buttons-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-  width: 100%;
-  margin-top: 20px;
-}
+      .buttons-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        width: 100%;
+        margin-top: 20px;
+      }
 
-.buttons-container .enter-btn,
-.buttons-container .playlist-link,
-.buttons-container .letter-link {
-  width: 100%;
-  max-width: 280px;
-  text-align: center;
-  margin-top: 0; /* Quitar márgenes individuales */
-}
+      .buttons-container .enter-btn,
+      .buttons-container .playlist-link,
+      .buttons-container .letter-link {
+        width: 100%;
+        max-width: 280px;
+        text-align: center;
+        margin-top: 0; /* Quitar márgenes individuales */
+      }
 
       .letter-link {
         display: inline-block;
@@ -251,18 +254,20 @@
 
       /* ===== MAIN APPLICATION ===== */
       .app-container {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-  box-sizing: border-box;
-  opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.5s ease, transform 0.5s ease;
-}
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        box-sizing: border-box;
+        opacity: 0;
+        transform: translateY(20px);
+        transition:
+          opacity 0.5s ease,
+          transform 0.5s ease;
+      }
 
       .app-ready .app-container {
         opacity: 1;
@@ -476,42 +481,42 @@
         transform: scale(0.85);
       }
 
-.main-play-btn {
-  font-size: 18px;
-  background: rgba(255, 255, 255, 0.08);
-  border-radius: 50px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  width: 38px;
-  height: 38px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-  transition: all 0.3s ease;
-}
+      .main-play-btn {
+        font-size: 18px;
+        background: rgba(255, 255, 255, 0.08);
+        border-radius: 50px;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        width: 38px;
+        height: 38px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+        transition: all 0.3s ease;
+      }
 
-.main-play-btn:active {
-  transform: scale(0.9);
-  background: rgba(255, 255, 255, 0.15);
-}
+      .main-play-btn:active {
+        transform: scale(0.9);
+        background: rgba(255, 255, 255, 0.15);
+      }
 
-.song-slide {
-  display: none;
-  height: 100%;
-  flex-direction: column;
-  justify-content: space-between;
-  opacity: 0;
-  transition: opacity 0.5s ease; 
-}
+      .song-slide {
+        display: none;
+        height: 100%;
+        flex-direction: column;
+        justify-content: space-between;
+        opacity: 0;
+        transition: opacity 0.5s ease;
+      }
 
-.song-slide.current-active {
-  display: flex;
-  opacity: 1; 
-}
+      .song-slide.current-active {
+        display: flex;
+        opacity: 1;
+      }
 
       .track-selector-wrapper {
         display: flex;
-        justify-content: space-between; 
+        justify-content: space-between;
         align-items: center;
         margin-top: 5px;
         margin-bottom: 5px;
@@ -611,27 +616,27 @@
   </head>
   <body>
     <div id="introScreen">
-  <div class="intro-content">
-    <h1>Ari & Sofi</h1>
-    <p class="subtitle">Taylor's Version</p>
+      <div class="intro-content">
+        <h1>Ari & Sofi</h1>
+        <p class="subtitle">Taylor's Version</p>
 
-    <div class="buttons-container">
-      <button class="enter-btn" onclick="startExperience()">
-        🎵 Abrir Álbum
-      </button>
-      <a
-        href="https://open.spotify.com/playlist/08yCg5eL6cU3CJ345yQgvc?si=990d49e3d2e741d6"
-        target="_blank"
-        class="playlist-link"
-      >
-        🎧 Playlist Spotify
-      </a>
-      <a href="docs/carta.pdf" download="carta.pdf" class="letter-link">
-        💌 Leer cartita
-      </a>
+        <div class="buttons-container">
+          <button class="enter-btn" onclick="startExperience()">
+            🎵 Abrir Álbum
+          </button>
+          <a
+            href="https://open.spotify.com/playlist/08yCg5eL6cU3CJ345yQgvc?si=990d49e3d2e741d6"
+            target="_blank"
+            class="playlist-link"
+          >
+            🎧 Playlist Spotify
+          </a>
+          <a href="docs/carta.pdf" download="carta.pdf" class="letter-link">
+            💌 Leer cartita
+          </a>
+        </div>
+      </div>
     </div>
-  </div>
-</div>
 
     <div class="app-container">
       <div class="player-card" id="playerCard">
@@ -3635,168 +3640,183 @@
       </div>
     </div>
 
-<script>
-  let currentTrackIndex = 0;
-  const totalTracks = 15;
-  let isPlaying = false;
+    <script>
+      let currentTrackIndex = 0;
+      const totalTracks = 15;
+      let isPlaying = false;
 
-  // ===== FUNCIÓN PARA INICIAR LA EXPERIENCIA (ÚNICA) =====
-  function startExperience() {
-    const intro = document.getElementById("introScreen");
-    intro.style.opacity = "0";
-    intro.style.visibility = "hidden";
-    document.body.classList.add("app-ready");
-    
-    // RESETEAR A LA PRIMERA CANCIÓN
-    currentTrackIndex = 0;
-    document.getElementById('trackSelector').value = 0;
-    
-    // Mostrar solo el slide de la canción 0
-    document.querySelectorAll('.song-slide').forEach(slide => {
-      slide.classList.remove('current-active');
-    });
-    document.getElementById('slide-0').classList.add('current-active');
+      // ===== FUNCIÓN PARA INICIAR LA EXPERIENCIA (ÚNICA) =====
+      function startExperience() {
+        const intro = document.getElementById("introScreen");
+        intro.style.opacity = "0";
+        intro.style.visibility = "hidden";
+        document.body.classList.add("app-ready");
 
-    // Asegurar que el audio esté listo
-    const audio = document.getElementById('audio-0');
-    if (audio) {
-      audio.currentTime = 0;
-    }
+        // RESETEAR A LA PRIMERA CANCIÓN
+        currentTrackIndex = 0;
+        document.getElementById("trackSelector").value = 0;
 
-    setTimeout(() => {
-      togglePlay();
-    }, 600);
-  }
-
-  // ===== FUNCIÓN PARA VOLVER A LA PANTALLA DE INICIO =====
-  function goHome() {
-    const currentAudio = document.getElementById(`audio-${currentTrackIndex}`);
-    if (currentAudio) {
-      currentAudio.pause();
-      currentAudio.currentTime = 0;
-    }
-    
-    currentTrackIndex = 0;
-    document.getElementById('trackSelector').value = 0;
-    isPlaying = false;
-    
-    document.body.classList.remove('app-ready');
-    const appContainer = document.querySelector('.app-container');
-    if (appContainer) {
-      appContainer.style.opacity = '0';
-      appContainer.style.transform = 'translateY(20px)';
-    }
-    
-    const intro = document.getElementById('introScreen');
-    if (intro) {
-      intro.style.opacity = '1';
-      intro.style.visibility = 'visible';
-    }
-    
-    const playBtn = document.getElementById('masterPlayBtn');
-    if (playBtn) playBtn.innerText = '▶';
-  }
-
-  // ===== FUNCIÓN PARA REPRODUCIR/PAUSAR =====
-  function togglePlay() {
-    const currentAudio = document.getElementById(`audio-${currentTrackIndex}`);
-    const playBtn = document.getElementById("masterPlayBtn");
-
-    if (!currentAudio) return;
-
-    if (isPlaying) {
-      currentAudio.pause();
-      playBtn.innerText = "▶";
-      isPlaying = false;
-    } else {
-      currentAudio.play()
-        .then(() => {
-          playBtn.innerText = "▐▐";
-          isPlaying = true;
-        })
-        .catch((e) => {
-          console.log("Error al reproducir:", e);
-          setTimeout(() => {
-            currentAudio.play().catch(() => {});
-          }, 100);
+        // Mostrar solo el slide de la canción 0
+        document.querySelectorAll(".song-slide").forEach((slide) => {
+          slide.classList.remove("current-active");
         });
-    }
-  }
+        document.getElementById("slide-0").classList.add("current-active");
 
-  // ===== FUNCIÓN PARA CAMBIAR DE CANCIÓN =====
-  function changeTrack(direction) {
-    const currentAudio = document.getElementById(`audio-${currentTrackIndex}`);
-    if (currentAudio) {
-      currentAudio.pause();
-      currentAudio.currentTime = 0;
-    }
+        // Asegurar que el audio esté listo
+        const audio = document.getElementById("audio-0");
+        if (audio) {
+          audio.currentTime = 0;
+        }
 
-    const currentSlide = document.getElementById(`slide-${currentTrackIndex}`);
-    if (currentSlide) {
-      currentSlide.classList.remove("current-active");
-    }
-
-    currentTrackIndex += direction;
-    if (currentTrackIndex >= totalTracks) currentTrackIndex = 0;
-    if (currentTrackIndex < 0) currentTrackIndex = totalTracks - 1;
-
-    const nextSlide = document.getElementById(`slide-${currentTrackIndex}`);
-    if (nextSlide) {
-      nextSlide.classList.add("current-active");
-    }
-
-    const nextAudio = document.getElementById(`audio-${currentTrackIndex}`);
-    const playBtn = document.getElementById("masterPlayBtn");
-
-    if (isPlaying && nextAudio) {
-      nextAudio.play().catch(() => {});
-      playBtn.innerText = "▐▐";
-    } else if (nextAudio) {
-      isPlaying = true;
-      playBtn.innerText = "▐▐";
-      nextAudio.play().catch(() => {});
-    }
-
-    document.getElementById("trackSelector").value = currentTrackIndex;
-  }
-
-  // ===== FUNCIÓN PARA IR A CANCIÓN ESPECÍFICA =====
-  function goToTrack(index) {
-    index = parseInt(index);
-    if (index === currentTrackIndex) return;
-
-    const currentAudio = document.getElementById(`audio-${currentTrackIndex}`);
-    if (currentAudio) {
-      currentAudio.pause();
-      currentAudio.currentTime = 0;
-    }
-
-    const currentSlide = document.getElementById(`slide-${currentTrackIndex}`);
-    if (currentSlide) {
-      currentSlide.classList.remove("current-active");
-    }
-
-    currentTrackIndex = index;
-
-    const nextSlide = document.getElementById(`slide-${currentTrackIndex}`);
-    if (nextSlide) {
-      nextSlide.classList.add("current-active");
-    }
-
-    document.getElementById("trackSelector").value = currentTrackIndex;
-
-    if (isPlaying) {
-      const nextAudio = document.getElementById(`audio-${currentTrackIndex}`);
-      if (nextAudio) {
-        nextAudio.play().catch(() => {});
+        setTimeout(() => {
+          togglePlay();
+        }, 600);
       }
-    }
-  }
 
-  // ===== FUNCIÓN PARA MOSTRAR/OCULTAR EXPLICACIONES =====
-  function toggleNote(element) {
-    element.classList.toggle("active");
-  }
-</script>
+      // ===== FUNCIÓN PARA VOLVER A LA PANTALLA DE INICIO =====
+      function goHome() {
+        const currentAudio = document.getElementById(
+          `audio-${currentTrackIndex}`,
+        );
+        if (currentAudio) {
+          currentAudio.pause();
+          currentAudio.currentTime = 0;
+        }
+
+        currentTrackIndex = 0;
+        document.getElementById("trackSelector").value = 0;
+        isPlaying = false;
+
+        document.body.classList.remove("app-ready");
+        const appContainer = document.querySelector(".app-container");
+        if (appContainer) {
+          appContainer.style.opacity = "0";
+          appContainer.style.transform = "translateY(20px)";
+        }
+
+        const intro = document.getElementById("introScreen");
+        if (intro) {
+          intro.style.opacity = "1";
+          intro.style.visibility = "visible";
+        }
+
+        const playBtn = document.getElementById("masterPlayBtn");
+        if (playBtn) playBtn.innerText = "▶";
+      }
+
+      // ===== FUNCIÓN PARA REPRODUCIR/PAUSAR =====
+      function togglePlay() {
+        const currentAudio = document.getElementById(
+          `audio-${currentTrackIndex}`,
+        );
+        const playBtn = document.getElementById("masterPlayBtn");
+
+        if (!currentAudio) return;
+
+        if (isPlaying) {
+          currentAudio.pause();
+          playBtn.innerText = "▶";
+          isPlaying = false;
+        } else {
+          currentAudio
+            .play()
+            .then(() => {
+              playBtn.innerText = "▐▐";
+              isPlaying = true;
+            })
+            .catch((e) => {
+              console.log("Error al reproducir:", e);
+              setTimeout(() => {
+                currentAudio.play().catch(() => {});
+              }, 100);
+            });
+        }
+      }
+
+      // ===== FUNCIÓN PARA CAMBIAR DE CANCIÓN =====
+      function changeTrack(direction) {
+        const currentAudio = document.getElementById(
+          `audio-${currentTrackIndex}`,
+        );
+        if (currentAudio) {
+          currentAudio.pause();
+          currentAudio.currentTime = 0;
+        }
+
+        const currentSlide = document.getElementById(
+          `slide-${currentTrackIndex}`,
+        );
+        if (currentSlide) {
+          currentSlide.classList.remove("current-active");
+        }
+
+        currentTrackIndex += direction;
+        if (currentTrackIndex >= totalTracks) currentTrackIndex = 0;
+        if (currentTrackIndex < 0) currentTrackIndex = totalTracks - 1;
+
+        const nextSlide = document.getElementById(`slide-${currentTrackIndex}`);
+        if (nextSlide) {
+          nextSlide.classList.add("current-active");
+        }
+
+        const nextAudio = document.getElementById(`audio-${currentTrackIndex}`);
+        const playBtn = document.getElementById("masterPlayBtn");
+
+        if (isPlaying && nextAudio) {
+          nextAudio.play().catch(() => {});
+          playBtn.innerText = "▐▐";
+        } else if (nextAudio) {
+          isPlaying = true;
+          playBtn.innerText = "▐▐";
+          nextAudio.play().catch(() => {});
+        }
+
+        document.getElementById("trackSelector").value = currentTrackIndex;
+      }
+
+      // ===== FUNCIÓN PARA IR A CANCIÓN ESPECÍFICA =====
+      function goToTrack(index) {
+        index = parseInt(index);
+        if (index === currentTrackIndex) return;
+
+        const currentAudio = document.getElementById(
+          `audio-${currentTrackIndex}`,
+        );
+        if (currentAudio) {
+          currentAudio.pause();
+          currentAudio.currentTime = 0;
+        }
+
+        const currentSlide = document.getElementById(
+          `slide-${currentTrackIndex}`,
+        );
+        if (currentSlide) {
+          currentSlide.classList.remove("current-active");
+        }
+
+        currentTrackIndex = index;
+
+        const nextSlide = document.getElementById(`slide-${currentTrackIndex}`);
+        if (nextSlide) {
+          nextSlide.classList.add("current-active");
+        }
+
+        document.getElementById("trackSelector").value = currentTrackIndex;
+
+        if (isPlaying) {
+          const nextAudio = document.getElementById(
+            `audio-${currentTrackIndex}`,
+          );
+          if (nextAudio) {
+            nextAudio.play().catch(() => {});
+          }
+        }
+      }
+
+      // ===== FUNCIÓN PARA MOSTRAR/OCULTAR EXPLICACIONES =====
+      function toggleNote(element) {
+        element.classList.toggle("active");
+      }
+    </script>
   </body>
 </html>
